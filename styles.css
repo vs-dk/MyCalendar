@@ -91,12 +91,12 @@ html, body {
 }
 
 #month-year-label.flash {
-    animation: monthFlash 800ms ease;
+    animation: monthFlash 1200ms ease;
 }
 
 @keyframes monthFlash {
-    0% { color: var(--text-header); }
-    30% { color: #b0b0b0; }
+    0% { color: #c0c0c0; }
+    40% { color: #c0c0c0; }
     100% { color: var(--text-header); }
 }
 
