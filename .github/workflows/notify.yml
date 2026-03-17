@@ -53,12 +53,24 @@ jobs:
           # Read markers for target date
           MARKERS=$(cat data/markers.json)
 
+          # Check day of week (1=Mon, 7=Sun)
+          DOW=$(TZ="Europe/Madrid" date -d "$TARGET_DATE" +%u)
+          IS_WEEKEND=false
+          if [ "$DOW" = "6" ] || [ "$DOW" = "7" ]; then
+            IS_WEEKEND=true
+          fi
+
           # Check each marker type
           # Ella (custody): ON if marker present, OFF if not
           HAS_CUSTODY=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("custody")) then "ON" else "OFF" end) else "OFF" end')
-          # School & Work: INVERTED — no marker = normal day (ON), marker = holiday (OFF)
-          HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "OFF" else "ON" end) else "ON" end')
-          HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "OFF" else "ON" end) else "ON" end')
+          # School & Work: weekend = always OFF, weekday: no marker = ON, marker = OFF
+          if [ "$IS_WEEKEND" = "true" ]; then
+            HAS_SCHOOL="OFF"
+            HAS_WORK="OFF"
+          else
+            HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "OFF" else "ON" end) else "ON" end')
+            HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "OFF" else "ON" end) else "ON" end')
+          fi
 
           MESSAGE="Ella: $HAS_CUSTODY | School: $HAS_SCHOOL | Work: $HAS_WORK"
           echo "Sending: $MESSAGE"
@@ -66,7 +78,7 @@ jobs:
           # Send via ntfy.sh
           curl -s \
             -H "Title: MyCalendar" \
-            -H "Tags: calendar" \
+            -H "Tags: girl" \
             -H "Priority: high" \
             -d "$MESSAGE" \
             https://ntfy.sh/mycalendar
