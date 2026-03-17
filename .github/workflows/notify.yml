@@ -63,7 +63,7 @@ jobs:
 
           # Send via ntfy.sh
           curl -s \
-            -H "Title: Calendar" \
+            -H "Title: MyCalendar" \
             -H "Tags: calendar" \
             -H "Priority: high" \
             -d "$MESSAGE" \
