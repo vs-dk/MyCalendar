@@ -168,8 +168,13 @@ async function syncToGitHub(data) {
 
 // ---- Rendering ----
 
-function renderHeader() {
+function renderHeader(flash = false) {
     dom.monthYearLabel.textContent = `${MONTHS[state.currentMonth]} ${state.currentYear}`;
+    if (flash) {
+        dom.monthYearLabel.classList.remove('flash');
+        void dom.monthYearLabel.offsetWidth; // force reflow
+        dom.monthYearLabel.classList.add('flash');
+    }
 }
 
 function renderCalendar(direction = null) {
@@ -337,7 +342,7 @@ function renderAll() {
 function goToMonth(year, month, direction = null) {
     state.currentYear = year;
     state.currentMonth = month;
-    renderHeader();
+    renderHeader(true);
     renderCalendar(direction);
 }
 

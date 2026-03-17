@@ -36,7 +36,7 @@
     /* Transitions */
     --transition-fast: 150ms ease;
     --transition-medium: 250ms ease;
-    --transition-slow: 350ms ease;
+    --transition-slow: 500ms ease;
 }
 
 /* --- Reset & Base --- */
@@ -88,6 +88,16 @@ html, body {
 
 #month-year-label:hover {
     color: #909090;
+}
+
+#month-year-label.flash {
+    animation: monthFlash 800ms ease;
+}
+
+@keyframes monthFlash {
+    0% { color: var(--text-header); }
+    30% { color: #b0b0b0; }
+    100% { color: var(--text-header); }
 }
 
 #nav-arrows {
