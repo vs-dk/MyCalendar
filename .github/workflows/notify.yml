@@ -40,8 +40,8 @@ jobs:
           # (skips the duplicate UTC trigger for the wrong season)
           # Manual runs (workflow_dispatch) always go through
           if [ "${{ github.event_name }}" = "schedule" ]; then
-            if [ "$LOCAL_TIME" != "08:00" ] && [ "$LOCAL_TIME" != "15:30" ] && [ "$LOCAL_TIME" != "20:00" ]; then
-              echo "Not a target time (time=$LOCAL_TIME), skipping"
+            if [ "$HOUR" != "08" ] && [ "$HOUR" != "15" ] && [ "$HOUR" != "20" ]; then
+              echo "Not a target hour (hour=$HOUR), skipping"
               exit 0
             fi
           fi
