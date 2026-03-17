@@ -9,7 +9,16 @@ on:
     - cron: '30 14 * * *'   # 3:30pm CET (winter)
     - cron: '0 18 * * *'    # 8pm CEST (summer)
     - cron: '0 19 * * *'    # 8pm CET (winter)
-  workflow_dispatch: # Allow manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'Notification type'
+        required: true
+        default: 'summary'
+        type: choice
+        options:
+          - summary
+          - pickup
 
 jobs:
   notify:
@@ -46,7 +55,8 @@ jobs:
           MARKERS=$(cat data/markers.json)
 
           # --- 3:30pm pickup notification ---
-          if [ "$HOUR" = "15" ] || ([ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "$HOUR" -ge 12 ] && [ "$HOUR" -lt 18 ]); then
+          MANUAL_TYPE="${{ github.event.inputs.type }}"
+          if [ "$HOUR" = "15" ] || [ "$MANUAL_TYPE" = "pickup" ]; then
             DOW=$(TZ="Europe/Madrid" date -d "$TODAY" +%u)
             IS_WEEKEND=false
             if [ "$DOW" = "6" ] || [ "$DOW" = "7" ]; then
