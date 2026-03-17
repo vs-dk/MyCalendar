@@ -95,8 +95,8 @@ html, body {
 }
 
 @keyframes monthFlash {
-    0% { color: #c0c0c0; }
-    40% { color: #c0c0c0; }
+    0% { color: var(--color-custody); }
+    40% { color: var(--color-custody); }
     100% { color: var(--text-header); }
 }
 
