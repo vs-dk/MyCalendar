@@ -1,0 +1,479 @@
+/* ============================================
+   CUSTODY CALENDAR — Design System
+   ============================================ */
+
+/* --- CSS Variables (Design Tokens) --- */
+:root {
+    /* Backgrounds */
+    --bg-app: #1a1a1a;
+    --bg-cell: #252525;
+    --bg-modal: #202020;
+    --bg-modal-overlay: rgba(0, 0, 0, 0.6);
+
+    /* Text Colors */
+    --text-primary: #909090;       /* Day numbers (current month) */
+    --text-secondary: #3a3a3a;     /* Day numbers (other months) */
+    --text-header: #707070;        /* Month/year header */
+    --text-weekday: #505050;       /* Weekday labels */
+
+    /* Accent Colors */
+    --color-custody: #a855f7;      /* Purple */
+    --color-school: #e0a020;       /* Orange */
+    --color-work: #4a90e2;         /* Blue */
+    --color-both-holidays: #35b868;/* Green */
+    --color-today: #383838;        /* Today background (subtle gray) */
+
+    /* Lock */
+    --color-lock-locked: #b04040;
+    --color-lock-unlocked: #40b060;
+
+    /* Layout */
+    --weekend-gap: 5px;
+    --cell-size: 48px;
+    --border-radius: 8px;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-medium: 250ms ease;
+    --transition-slow: 350ms ease;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    background: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* --- App Container --- */
+#app {
+    max-width: 420px;
+    margin: 0 auto;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px;
+}
+
+/* --- Header --- */
+#calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px 20px;
+}
+
+#month-year-label {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--text-header);
+    cursor: pointer;
+    letter-spacing: -0.02em;
+    transition: color var(--transition-fast);
+}
+
+#month-year-label:hover {
+    color: #909090;
+}
+
+#nav-arrows {
+    display: flex;
+    gap: 4px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-header);
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    line-height: 1;
+}
+
+.nav-btn:hover {
+    background: var(--bg-cell);
+    color: #e0e0e0;
+}
+
+.nav-btn:active {
+    transform: scale(0.92);
+}
+
+/* --- Weekday Labels --- */
+#weekday-labels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) var(--weekend-gap) repeat(2, 1fr);
+    padding: 0 0 8px;
+}
+
+#weekday-labels span {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-weekday);
+    text-transform: uppercase;
+    padding: 0;
+    letter-spacing: 0.05em;
+}
+
+/* Weekend labels need to skip the gap column (col 6) */
+#weekday-labels .weekend-gap-label {
+    display: block;
+}
+
+#weekday-labels .weekend-label {
+    text-align: center;
+}
+
+/* --- Calendar Grid --- */
+#calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) var(--weekend-gap) repeat(2, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: 0;
+}
+
+/* --- Day Cell --- */
+.day-cell {
+    background: var(--bg-cell);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: default;
+    transition: background var(--transition-fast);
+    height: 44px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* Weekend gap column — invisible spacer */
+.day-cell.weekend-gap {
+    background: var(--bg-app);
+    pointer-events: none;
+    width: var(--weekend-gap);
+}
+
+/* Day number */
+.day-number {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    z-index: 1;
+    position: relative;
+    line-height: 1;
+    transition: color var(--transition-fast);
+}
+
+/* Other month days */
+.day-cell.other-month .day-number {
+    color: var(--text-secondary);
+}
+
+/* Editable state */
+.day-cell.editable {
+    cursor: pointer;
+}
+
+.day-cell.editable:hover {
+    background: #2c2c2c;
+}
+
+.day-cell.editable:active {
+    background: #333333;
+}
+
+/* --- Visual Markers --- */
+
+/* Custody: purple number */
+.day-cell.custody .day-number {
+    color: var(--color-custody);
+    font-weight: 500;
+}
+
+/* Holiday dots — small dot below the number */
+.day-cell .marker-dot {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: transparent;
+    pointer-events: none;
+    transition: background var(--transition-medium);
+}
+
+.day-cell.school-holiday .marker-dot {
+    background: var(--color-school);
+}
+
+.day-cell.work-holiday .marker-dot {
+    background: var(--color-work);
+}
+
+/* Both holidays → green dot (overrides individual) */
+.day-cell.school-holiday.work-holiday .marker-dot {
+    background: var(--color-both-holidays);
+}
+
+/* --- Today Indicator --- */
+.day-cell.today {
+    background: var(--color-today);
+}
+
+.day-cell.today .day-number {
+    color: var(--text-primary);
+}
+
+/* Custody purple must override today styling */
+.day-cell.today.custody .day-number {
+    color: var(--color-custody);
+}
+
+/* --- Bottom Bar --- */
+#bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 4px 4px;
+    min-height: 48px;
+}
+
+.lock-btn {
+    background: none;
+    border: none;
+    color: var(--color-lock-locked);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: color var(--transition-fast), background var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lock-btn:hover {
+    background: var(--bg-cell);
+}
+
+.lock-btn.unlocked {
+    color: var(--color-lock-unlocked);
+}
+
+/* Lock icon paths for locked/unlocked states */
+.lock-btn.unlocked svg path {
+    d: path("M7 11V7a5 5 0 0 1 9.9-1");
+}
+
+/* Mode button */
+.mode-btn {
+    background: none;
+    border: 2px solid var(--color-custody);
+    color: var(--color-custody);
+    font-family: var(--font-family);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 7px 0;
+    width: 100px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    text-transform: uppercase;
+}
+
+.mode-btn:hover {
+    background: rgba(168, 85, 247, 0.1);
+}
+
+.mode-btn:active {
+    transform: scale(0.95);
+}
+
+/* Mode colors */
+.mode-btn.mode-custody {
+    border-color: var(--color-custody);
+    color: var(--color-custody);
+}
+
+.mode-btn.mode-custody:hover {
+    background: rgba(168, 85, 247, 0.1);
+}
+
+.mode-btn.mode-school {
+    border-color: var(--color-school);
+    color: var(--color-school);
+}
+
+.mode-btn.mode-school:hover {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.mode-btn.mode-work {
+    border-color: var(--color-work);
+    color: var(--color-work);
+}
+
+.mode-btn.mode-work:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* --- Hidden utility --- */
+.hidden {
+    display: none !important;
+}
+
+/* --- Modal Overlay --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-modal-overlay);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+}
+
+.modal-picker {
+    background: var(--bg-modal);
+    border-radius: 16px;
+    padding: 24px;
+    width: 300px;
+    transform: scale(0.9);
+    transition: transform var(--transition-medium);
+    border: 1px solid #2a2a2a;
+}
+
+.modal-overlay.visible .modal-picker {
+    transform: scale(1);
+}
+
+/* Modal year nav */
+#modal-year-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+#modal-year-label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-header);
+    min-width: 60px;
+    text-align: center;
+}
+
+.modal-nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-header);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background var(--transition-fast);
+    line-height: 1;
+}
+
+.modal-nav-btn:hover {
+    background: var(--bg-cell);
+}
+
+/* Modal months grid */
+#modal-months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.modal-month-btn {
+    background: var(--bg-cell);
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    font-size: 0.8rem;
+    font-weight: 400;
+    padding: 10px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.modal-month-btn:hover {
+    background: #333;
+    color: var(--text-header);
+}
+
+.modal-month-btn.current {
+    background: #333;
+    color: var(--text-header);
+    font-weight: 500;
+}
+
+/* --- Swipe Animation --- */
+#calendar-grid.slide-left {
+    animation: slideLeft var(--transition-slow) ease;
+}
+
+#calendar-grid.slide-right {
+    animation: slideRight var(--transition-slow) ease;
+}
+
+@keyframes slideLeft {
+    0% { opacity: 0; transform: translateX(30px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideRight {
+    0% { opacity: 0; transform: translateX(-30px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Desktop adjustments --- */
+@media (min-width: 768px) {
+    #app {
+        padding: 24px 16px;
+    }
+
+    .day-cell {
+        height: 50px;
+    }
+
+    #month-year-label {
+        font-size: 1.5rem;
+    }
+}
+
+/* --- Scrollbar (if needed) --- */
+::-webkit-scrollbar {
+    width: 0;
+}

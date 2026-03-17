@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Personal custody calendar with holiday tracking and push notifications">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Custody Calendar</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header id="calendar-header">
+            <h1 id="month-year-label">March 2026</h1>
+            <div id="nav-arrows">
+                <button id="btn-prev" class="nav-btn" aria-label="Previous month">&#8249;</button>
+                <button id="btn-next" class="nav-btn" aria-label="Next month">&#8250;</button>
+            </div>
+        </header>
+
+        <!-- Weekday labels -->
+        <div id="weekday-labels">
+            <span>M</span>
+            <span>T</span>
+            <span>W</span>
+            <span>T</span>
+            <span>F</span>
+            <span class="weekend-gap-label"></span>
+            <span class="weekend-label">S</span>
+            <span class="weekend-label">S</span>
+        </div>
+
+        <!-- Calendar grid -->
+        <div id="calendar-grid">
+            <!-- Days will be rendered by JS -->
+        </div>
+
+        <!-- Bottom bar -->
+        <div id="bottom-bar">
+            <button id="btn-lock" class="lock-btn" aria-label="Toggle lock">
+                <svg id="lock-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Locked icon (default) -->
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </button>
+            <button id="btn-mode" class="mode-btn hidden" aria-label="Toggle mode">
+                ELLA
+            </button>
+        </div>
+
+        <!-- Month/Year picker modal -->
+        <div id="modal-overlay" class="modal-overlay hidden">
+            <div id="modal-picker" class="modal-picker">
+                <div id="modal-year-nav">
+                    <button id="modal-year-prev" class="modal-nav-btn" aria-label="Previous year">&#8249;</button>
+                    <span id="modal-year-label">2026</span>
+                    <button id="modal-year-next" class="modal-nav-btn" aria-label="Next year">&#8250;</button>
+                </div>
+                <div id="modal-months-grid">
+                    <!-- 12 month buttons rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
