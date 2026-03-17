@@ -23,14 +23,18 @@ jobs:
           TODAY=$(TZ="Europe/Madrid" date +%Y-%m-%d)
           HOUR=$(TZ="Europe/Madrid" date +%H)
 
-          # Only run at exactly 8am or 8pm local time (skip duplicate UTC triggers)
-          if [ "$HOUR" != "08" ] && [ "$HOUR" != "20" ]; then
-            echo "Not 8am or 8pm local (hour=$HOUR), skipping"
-            exit 0
+          # For scheduled runs, only run at exactly 8am or 8pm local time
+          # (skips the duplicate UTC trigger for the wrong season)
+          # Manual runs (workflow_dispatch) always go through
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            if [ "$HOUR" != "08" ] && [ "$HOUR" != "20" ]; then
+              echo "Not 8am or 8pm local (hour=$HOUR), skipping"
+              exit 0
+            fi
           fi
 
           # Decide if morning (show today) or evening (show tomorrow)
-          if [ "$HOUR" = "08" ]; then
+          if [ "$HOUR" -lt 12 ]; then
             TARGET_DATE="$TODAY"
             LABEL="Today"
           else
