@@ -116,6 +116,37 @@ function loadData() {
     } catch (e) {
         console.warn('Failed to load calendar data:', e);
     }
+    // Also pull from GitHub to stay in sync across devices
+    loadFromGitHub();
+}
+
+async function loadFromGitHub() {
+    const token = getGitHubToken();
+    if (!token) return;
+
+    try {
+        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const parsed = JSON.parse(atob(data.content));
+
+        // Replace local data with GitHub data (GitHub is source of truth)
+        state.markers = {};
+        for (const [key, arr] of Object.entries(parsed)) {
+            state.markers[key] = new Set(arr);
+        }
+
+        // Update localStorage to match
+        localStorage.setItem('custody-calendar-data', JSON.stringify(parsed));
+
+        // Re-render with fresh data
+        renderCalendar();
+    } catch (e) {
+        console.warn('GitHub load failed, using local data:', e);
+    }
 }
 
 // ---- GitHub Sync ----
@@ -439,6 +470,10 @@ function initEvents() {
     // Lock toggle
     dom.btnLock.addEventListener('click', () => {
         state.isLocked = !state.isLocked;
+        if (!state.isLocked) {
+            state.currentModeIndex = 0; // Always start with "Ella" mode
+            renderModeButton();
+        }
         renderLockState();
         renderCalendar();
     });
