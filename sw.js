@@ -1,5 +1,5 @@
 /* ============================================
-   CUSTODY CALENDAR — Service Worker
+   MY CALENDAR — Service Worker
    Handles offline caching for PWA installability
    ============================================ */
 

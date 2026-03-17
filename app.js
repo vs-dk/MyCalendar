@@ -1,5 +1,5 @@
 /* ============================================
-   CUSTODY CALENDAR — Application Logic
+   MY CALENDAR — Application Logic
    ============================================ */
 
 // ---- Constants ----
