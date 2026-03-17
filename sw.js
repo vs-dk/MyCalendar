@@ -3,7 +3,7 @@
    Handles offline caching for PWA installability
    ============================================ */
 
-const CACHE_NAME = 'custody-calendar-v1';
+const CACHE_NAME = 'custody-calendar-v2';
 const ASSETS = [
     './',
     './index.html',
@@ -35,20 +35,19 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch — serve from cache, fallback to network
+// Fetch — network first, fallback to cache (ensures updates are seen immediately)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((cached) => {
-            return cached || fetch(event.request).then((response) => {
-                // Cache new successful requests
-                if (response.status === 200) {
-                    const clone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, clone);
-                    });
-                }
-                return response;
-            });
+        fetch(event.request).then((response) => {
+            if (response.status === 200) {
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, clone);
+                });
+            }
+            return response;
+        }).catch(() => {
+            return caches.match(event.request);
         })
     );
 });
