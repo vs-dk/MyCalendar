@@ -54,9 +54,11 @@ jobs:
           MARKERS=$(cat data/markers.json)
 
           # Check each marker type
+          # Ella (custody): ON if marker present, OFF if not
           HAS_CUSTODY=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("custody")) then "ON" else "OFF" end) else "OFF" end')
-          HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "ON" else "OFF" end) else "OFF" end')
-          HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "ON" else "OFF" end) else "OFF" end')
+          # School & Work: INVERTED — no marker = normal day (ON), marker = holiday (OFF)
+          HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "OFF" else "ON" end) else "ON" end')
+          HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "OFF" else "ON" end) else "ON" end')
 
           MESSAGE="Ella: $HAS_CUSTODY | School: $HAS_SCHOOL | Work: $HAS_WORK"
           echo "Sending: $MESSAGE"
