@@ -5,11 +5,11 @@
 
 const CACHE_NAME = 'custody-calendar-v1';
 const ASSETS = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/app.js',
-    '/manifest.json',
+    './',
+    './index.html',
+    './styles.css',
+    './app.js',
+    './manifest.json',
 ];
 
 // Install — cache all assets

@@ -101,6 +101,7 @@ function saveData() {
         serialized[key] = Array.from(markers);
     }
     localStorage.setItem('custody-calendar-data', JSON.stringify(serialized));
+    syncToGitHub(serialized);
 }
 
 function loadData() {
@@ -114,6 +115,54 @@ function loadData() {
         }
     } catch (e) {
         console.warn('Failed to load calendar data:', e);
+    }
+}
+
+// ---- GitHub Sync ----
+
+const GITHUB_REPO = 'vs-dk/MyCalendar';
+const GITHUB_FILE = 'data/markers.json';
+
+function getGitHubToken() {
+    return localStorage.getItem('github-token');
+}
+
+function setGitHubToken(token) {
+    localStorage.setItem('github-token', token);
+}
+
+async function syncToGitHub(data) {
+    const token = getGitHubToken();
+    if (!token) return;
+
+    try {
+        // Get current file SHA (needed for updates)
+        let sha = null;
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (getRes.ok) {
+            const existing = await getRes.json();
+            sha = existing.sha;
+        }
+
+        // Write file
+        const body = {
+            message: 'sync markers',
+            content: btoa(JSON.stringify(data, null, 2)),
+        };
+        if (sha) body.sha = sha;
+
+        await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+    } catch (e) {
+        console.warn('GitHub sync failed:', e);
     }
 }
 
@@ -430,13 +479,23 @@ function initEvents() {
 // ---- Init ----
 
 function init() {
+    // Check for token in URL (one-time setup)
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+        setGitHubToken(token);
+        // Clean URL
+        window.history.replaceState({}, '', window.location.pathname);
+        console.log('GitHub token saved');
+    }
+
     loadData();
     initEvents();
     renderAll();
 
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(() => console.log('SW registered'))
             .catch((err) => console.warn('SW registration failed:', err));
     }

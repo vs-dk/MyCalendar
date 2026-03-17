@@ -1,0 +1,65 @@
+name: Daily Calendar Notifications
+
+on:
+  schedule:
+    # Cover both CET (UTC+1) and CEST (UTC+2) for 8am/8pm local
+    - cron: '0 6 * * *'    # 8am CEST (summer)
+    - cron: '0 7 * * *'    # 8am CET (winter)
+    - cron: '0 18 * * *'   # 8pm CEST (summer)
+    - cron: '0 19 * * *'   # 8pm CET (winter)
+  workflow_dispatch: # Allow manual trigger for testing
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Send notification
+        run: |
+          # Get tomorrow's date in Europe/Madrid timezone
+          TOMORROW=$(TZ="Europe/Madrid" date -d "+1 day" +%Y-%m-%d)
+          TODAY=$(TZ="Europe/Madrid" date +%Y-%m-%d)
+          HOUR=$(TZ="Europe/Madrid" date +%H)
+
+          # Only run at exactly 8am or 8pm local time (skip duplicate UTC triggers)
+          if [ "$HOUR" != "08" ] && [ "$HOUR" != "20" ]; then
+            echo "Not 8am or 8pm local (hour=$HOUR), skipping"
+            exit 0
+          fi
+
+          # Decide if morning (show today) or evening (show tomorrow)
+          if [ "$HOUR" = "08" ]; then
+            TARGET_DATE="$TODAY"
+            LABEL="Today"
+          else
+            TARGET_DATE="$TOMORROW"
+            LABEL="Tomorrow"
+          fi
+
+          echo "Target date: $TARGET_DATE ($LABEL)"
+
+          # Check if markers.json exists
+          if [ ! -f data/markers.json ]; then
+            echo "No markers file found, skipping"
+            exit 0
+          fi
+
+          # Read markers for target date
+          MARKERS=$(cat data/markers.json)
+
+          # Check each marker type
+          HAS_CUSTODY=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("custody")) then "ON" else "OFF" end) else "OFF" end')
+          HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "ON" else "OFF" end) else "OFF" end')
+          HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "ON" else "OFF" end) else "OFF" end')
+
+          MESSAGE="$LABEL ($TARGET_DATE): Ella → $HAS_CUSTODY | School → $HAS_SCHOOL | Work → $HAS_WORK"
+          echo "Sending: $MESSAGE"
+
+          # Send via ntfy.sh
+          curl -s \
+            -H "Title: Calendar" \
+            -H "Tags: calendar" \
+            -d "$MESSAGE" \
+            https://ntfy.sh/mycalendar
