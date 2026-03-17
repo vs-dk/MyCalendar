@@ -78,7 +78,7 @@ jobs:
           # Send via ntfy.sh
           curl -s \
             -H "Title: MyCalendar" \
-            -H "Tags: girl" \
+            -H "Tags: sparkles" \
             -H "Priority: high" \
             -d "$MESSAGE" \
             https://ntfy.sh/mycalendar
