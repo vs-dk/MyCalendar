@@ -65,5 +65,6 @@ jobs:
           curl -s \
             -H "Title: Calendar" \
             -H "Tags: calendar" \
+            -H "Priority: high" \
             -d "$MESSAGE" \
             https://ntfy.sh/mycalendar
