@@ -2,13 +2,16 @@ name: Daily Calendar Notifications
 
 on:
   schedule:
-    # Cover both CET (UTC+1) and CEST (UTC+2) for 8am/3:30pm/8pm local
-    - cron: '0 6 * * *'     # 8am CEST (summer)
-    - cron: '0 7 * * *'     # 8am CET (winter)
-    - cron: '30 13 * * *'   # 3:30pm CEST (summer)
-    - cron: '30 14 * * *'   # 3:30pm CET (winter)
-    - cron: '0 18 * * *'    # 8pm CEST (summer)
-    - cron: '0 19 * * *'    # 8pm CET (winter)
+    # Use github.event.schedule to identify which notification to send.
+    # Each cron fires ONCE — no duplicates for CET/CEST.
+    # GitHub cron can delay up to ~60min, so we DON'T check the clock.
+    # Times are set ~15min early to account for typical GH Actions delay.
+    #
+    # TESTING: summary at ~13:15 Madrid, pickup at ~13:45 Madrid
+    - cron: '15 11 * * *'   # 11:15 UTC → 13:15 CEST
+    - cron: '45 11 * * *'   # 11:45 UTC → 13:45 CEST
+    # Evening summary (target: ~8:15pm Madrid)
+    - cron: '0 18 * * *'    # 18:00 UTC → 20:00 CEST / 19:00 CET
   workflow_dispatch:
     inputs:
       type:
@@ -17,8 +20,9 @@ on:
         default: 'summary'
         type: choice
         options:
-          - summary
+          - morning
           - pickup
+          - evening
 
 jobs:
   notify:
@@ -27,24 +31,30 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Send notification
+      - name: Determine notification type
+        id: ntype
         run: |
-          # Get dates and time in Europe/Madrid timezone
-          TOMORROW=$(TZ="Europe/Madrid" date -d "+1 day" +%Y-%m-%d)
-          TODAY=$(TZ="Europe/Madrid" date +%Y-%m-%d)
-          HOUR=$(TZ="Europe/Madrid" date +%H)
-          MINUTE=$(TZ="Europe/Madrid" date +%M)
-          LOCAL_TIME="${HOUR}:${MINUTE}"
-
-          # For scheduled runs, only run at exact local times
-          # (skips the duplicate UTC trigger for the wrong season)
-          # Manual runs (workflow_dispatch) always go through
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            if [ "$HOUR" != "08" ] && [ "$HOUR" != "15" ] && [ "$HOUR" != "20" ]; then
-              echo "Not a target hour (hour=$HOUR), skipping"
-              exit 0
-            fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "type=${{ github.event.inputs.type }}" >> $GITHUB_OUTPUT
+          else
+            CRON="${{ github.event.schedule }}"
+            case "$CRON" in
+              "15 11 * * *")  echo "type=morning" >> $GITHUB_OUTPUT ;;
+              "45 11 * * *")  echo "type=pickup"  >> $GITHUB_OUTPUT ;;
+              "0 18 * * *")   echo "type=evening" >> $GITHUB_OUTPUT ;;
+              *)              echo "type=unknown"  >> $GITHUB_OUTPUT ;;
+            esac
           fi
+
+      - name: Send notification
+        if: steps.ntype.outputs.type != 'unknown'
+        run: |
+          TYPE="${{ steps.ntype.outputs.type }}"
+          TODAY=$(TZ="Europe/Madrid" date +%Y-%m-%d)
+          TOMORROW=$(TZ="Europe/Madrid" date -d "+1 day" +%Y-%m-%d)
+
+          echo "Notification type: $TYPE"
+          echo "Today (Madrid): $TODAY"
 
           # Check if markers.json exists
           if [ ! -f data/markers.json ]; then
@@ -54,16 +64,14 @@ jobs:
 
           MARKERS=$(cat data/markers.json)
 
-          # --- 3:30pm pickup notification ---
-          MANUAL_TYPE="${{ github.event.inputs.type }}"
-          if [ "$HOUR" = "15" ] || [ "$MANUAL_TYPE" = "pickup" ]; then
+          # --- Pickup notification ---
+          if [ "$TYPE" = "pickup" ]; then
             DOW=$(TZ="Europe/Madrid" date -d "$TODAY" +%u)
             IS_WEEKEND=false
             if [ "$DOW" = "6" ] || [ "$DOW" = "7" ]; then
               IS_WEEKEND=true
             fi
 
-            # Only send if: weekday + custody (purple) + no school holiday (no orange)
             HAS_CUSTODY=$(echo "$MARKERS" | jq -r --arg d "$TODAY" 'if .[$d] then (if (.[$d] | index("custody")) then "yes" else "no" end) else "no" end')
             HAS_SCHOOL_HOLIDAY=$(echo "$MARKERS" | jq -r --arg d "$TODAY" 'if .[$d] then (if (.[$d] | index("school")) then "yes" else "no" end) else "no" end')
 
@@ -81,8 +89,8 @@ jobs:
             exit 0
           fi
 
-          # --- 8am / 8pm daily summary notification ---
-          if [ "$HOUR" -lt 12 ]; then
+          # --- Morning / Evening summary ---
+          if [ "$TYPE" = "morning" ]; then
             TARGET_DATE="$TODAY"
           else
             TARGET_DATE="$TOMORROW"
