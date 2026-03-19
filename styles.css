@@ -470,30 +470,44 @@ html, body {
 
 /* --- Events Section --- */
 #events-section {
-    margin-top: 12px;
+    margin-top: 24px;
     display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 0;
     overflow: hidden;
+    padding: 0 4px;
+}
+
+#events-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+#events-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-header);
+    letter-spacing: -0.01em;
 }
 
 #events-toolbar {
     display: flex;
     gap: 8px;
-    padding: 0 4px 8px;
     align-items: center;
 }
 
 .event-add-btn {
     background: #2a2a2a;
     border: 1px solid #3a3a3a;
-    color: #808080;
+    color: #909090;
     font-family: var(--font-family);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all var(--transition-fast);
     letter-spacing: 0.05em;
@@ -501,41 +515,54 @@ html, body {
 
 .event-add-btn:active {
     transform: scale(0.95);
+    background: #333;
 }
 
 .event-filter-btn {
     background: #2a2a2a;
     border: 1px solid #3a3a3a;
-    color: #808080;
+    color: #909090;
     font-family: var(--font-family);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    padding: 6px 10px;
-    border-radius: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all var(--transition-fast);
     letter-spacing: 0.05em;
-    margin-left: auto;
+}
+
+.event-filter-btn:active {
+    transform: scale(0.95);
+    background: #333;
 }
 
 .event-filter-btn.active {
-    border-color: #606060;
+    border-color: #505050;
     color: #b0b0b0;
+    background: #303030;
 }
 
 .event-expand-btn {
-    background: none;
-    border: none;
-    color: #505050;
-    font-size: 0.8rem;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #606060;
+    font-size: 0.7rem;
     cursor: pointer;
-    padding: 6px;
-    transition: transform var(--transition-fast), color var(--transition-fast);
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: all var(--transition-fast);
+}
+
+.event-expand-btn:active {
+    transform: scale(0.95);
+    background: #333;
 }
 
 .event-expand-btn.expanded {
     transform: rotate(180deg);
-    color: #808080;
+    color: #909090;
+    border-color: #505050;
 }
 
 #events-list {

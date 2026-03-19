@@ -561,7 +561,6 @@ const eventsState = {
 const evDom = {
     section: document.getElementById('events-section'),
     list: document.getElementById('events-list'),
-    dividerPast: document.getElementById('events-divider-past'),
     btnAddOO: document.getElementById('btn-add-oo'),
     btnAddRec: document.getElementById('btn-add-rec'),
     btnFilter: document.getElementById('btn-filter'),
@@ -784,11 +783,7 @@ function renderEventsList() {
     const items = getEventsList();
     const today = todayStr();
 
-    // Show/hide past divider
     const hasPast = filter !== 'completed' && items.some(i => i.sortDate < today);
-    const hasFuture = filter !== 'completed' && items.some(i => i.sortDate >= today);
-    evDom.dividerPast.classList.toggle('hidden', !hasPast);
-
     let pastDividerInserted = false;
 
     if (items.length === 0) {
