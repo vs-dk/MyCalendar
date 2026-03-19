@@ -479,14 +479,49 @@ html, body {
     padding: 0 4px;
 }
 
+#events-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #333;
+}
+
 #events-title {
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-header);
     letter-spacing: -0.01em;
-    padding-bottom: 4px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #333;
+}
+
+.event-collapse-btn {
+    background: none;
+    border: none;
+    color: #505050;
+    font-family: var(--font-family);
+    font-size: 0.6rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    letter-spacing: 0.03em;
+    transition: color var(--transition-fast);
+}
+
+.event-collapse-btn:active {
+    color: #909090;
+}
+
+/* Calendar collapsed state */
+#app.calendar-collapsed #calendar-header,
+#app.calendar-collapsed #weekday-labels,
+#app.calendar-collapsed #calendar-grid,
+#app.calendar-collapsed #bottom-bar {
+    display: none;
+}
+
+#app.calendar-collapsed #events-section {
+    margin-top: 0;
 }
 
 #events-toolbar {
@@ -557,7 +592,7 @@ html, body {
 .event-expand-btn {
     background: #2a2a2a;
     border: 1px solid #3a3a3a;
-    color: #606060;
+    color: #909090;
     font-family: var(--font-family);
     font-size: 0.65rem;
     font-weight: 500;
@@ -630,28 +665,28 @@ html, body {
 }
 
 .event-row.type-oo {
-    background: rgba(180, 100, 30, 0.15);
-    border-left: 3px solid rgba(180, 100, 30, 0.4);
+    background: rgba(220, 120, 30, 0.18);
+    border-left: 3px solid rgba(220, 120, 30, 0.55);
 }
 
 .event-row.type-rec {
-    background: rgba(120, 30, 50, 0.15);
-    border-left: 3px solid rgba(120, 30, 50, 0.4);
+    background: rgba(160, 40, 60, 0.2);
+    border-left: 3px solid rgba(160, 40, 60, 0.55);
 }
 
 /* completed items keep normal styling — filter context is enough */
 
 .event-row-date {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #707070;
-    min-width: 46px;
+    color: #808080;
+    min-width: 50px;
     letter-spacing: 0.02em;
 }
 
 .event-row-text {
-    font-size: 0.75rem;
-    color: #909090;
+    font-size: 0.85rem;
+    color: #a0a0a0;
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -684,13 +719,13 @@ html, body {
 
 .event-action-btn.confirm-delete {
     color: #c04040;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 
 .event-action-btn.confirm-done {
     color: #50a050;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 600;
 }
 

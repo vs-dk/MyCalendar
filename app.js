@@ -1076,6 +1076,14 @@ function initEventsListeners() {
     evDom.btnAddOO.addEventListener('click', openOOModal);
     evDom.btnAddRec.addEventListener('click', openRECModal);
 
+    // Expand/collapse calendar
+    const btnExpandEvents = document.getElementById('btn-expand-events');
+    btnExpandEvents.addEventListener('click', () => {
+        const app = document.getElementById('app');
+        const collapsed = app.classList.toggle('calendar-collapsed');
+        btnExpandEvents.textContent = collapsed ? 'collapse' : 'expand';
+    });
+
     evDom.btnFilter.addEventListener('click', () => {
         eventsState.filterIndex = (eventsState.filterIndex + 1) % FILTER_STATES.length;
         renderEventsList();
