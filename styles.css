@@ -655,8 +655,8 @@ html, body {
 /* Weekly separator */
 .events-week-sep {
     height: 1px;
-    background: #333;
-    margin: 6px 0;
+    background: #555;
+    margin: 8px 0;
 }
 
 /* Event row */

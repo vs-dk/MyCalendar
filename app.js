@@ -820,8 +820,11 @@ function renderEventsList() {
         // Weekly separator (ISO week: Monday-based)
         const [iy, im, id] = item.sortDate.split('-').map(Number);
         const itemDate = new Date(iy, im - 1, id);
-        const weekNum = Math.floor((itemDate.getTime() - new Date(iy, 0, 1).getTime()) / 604800000);
-        const weekKey = `${iy}-${weekNum}`;
+        // Get Monday of this item's week
+        const dow = (itemDate.getDay() + 6) % 7; // 0=Mon
+        const monday = new Date(itemDate);
+        monday.setDate(monday.getDate() - dow);
+        const weekKey = `${monday.getFullYear()}-${String(monday.getMonth()+1).padStart(2,'0')}-${String(monday.getDate()).padStart(2,'0')}`;
         if (lastWeek !== null && weekKey !== lastWeek) {
             const sep = document.createElement('div');
             sep.className = 'events-week-sep';
