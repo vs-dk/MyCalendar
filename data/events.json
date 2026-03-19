@@ -17,6 +17,12 @@
       "date": "2026-04-07",
       "text": "Trip",
       "completed": false
+    },
+    {
+      "id": "mmxfr008h3t3",
+      "date": "2026-05-26",
+      "text": "Flights",
+      "completed": false
     }
   ],
   "recurring": []
