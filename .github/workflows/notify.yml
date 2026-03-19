@@ -114,7 +114,24 @@ jobs:
             HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "🔴" else "🟢" end) else "🟢" end')
           fi
 
-          MESSAGE="Ella: $HAS_CUSTODY | S: $HAS_SCHOOL | W: $HAS_WORK"
+          # Check for events (one-off or recurring) on target date
+          HAS_EVENT=""
+          if [ -f data/events.json ]; then
+            EVENTS=$(cat data/events.json)
+            TARGET_DAY=$(echo "$TARGET_DATE" | cut -d'-' -f3 | sed 's/^0//')
+
+            # Check one-off events
+            OO_MATCH=$(echo "$EVENTS" | jq -r --arg d "$TARGET_DATE" '[.oneoff[] | select(.date == $d and .completed == false)] | length')
+
+            # Check recurring events (match day of month, not completed for this date)
+            REC_MATCH=$(echo "$EVENTS" | jq -r --arg day "$TARGET_DAY" --arg d "$TARGET_DATE" '[.recurring[] | select(.day == ($day | tonumber) and ((.completed // []) | index($d) | not))] | length')
+
+            if [ "$OO_MATCH" -gt 0 ] 2>/dev/null || [ "$REC_MATCH" -gt 0 ] 2>/dev/null; then
+              HAS_EVENT=" | Events: 🟡"
+            fi
+          fi
+
+          MESSAGE="Ella: $HAS_CUSTODY | S: $HAS_SCHOOL | W: $HAS_WORK${HAS_EVENT}"
           echo "Sending: $MESSAGE"
 
           curl -s \
