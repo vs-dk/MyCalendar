@@ -489,10 +489,11 @@ html, body {
 }
 
 #events-title {
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: #909090;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .event-collapse-btn {
@@ -500,12 +501,13 @@ html, body {
     border: 1px solid #3a3a3a;
     color: #909090;
     font-family: var(--font-family);
-    font-size: 0.65rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
-    padding: 8px 10px;
+    padding: 8px 14px;
     border-radius: 8px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     transition: all var(--transition-fast);
 }
 
@@ -545,6 +547,7 @@ html, body {
     cursor: pointer;
     transition: all var(--transition-fast);
     letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .event-add-btn:active {
@@ -557,15 +560,17 @@ html, body {
     border: 1px solid #3a3a3a;
     color: #909090;
     font-family: var(--font-family);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     padding: 8px 0;
-    width: 56px;
+    width: 90px;
     text-align: center;
     border-radius: 8px;
     cursor: pointer;
     transition: all var(--transition-fast);
     letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-left: auto;
 }
 
 .event-filter-btn:active {
@@ -596,14 +601,15 @@ html, body {
     border: 1px solid #3a3a3a;
     color: #909090;
     font-family: var(--font-family);
-    font-size: 0.65rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     cursor: pointer;
-    padding: 8px 10px;
+    padding: 8px 14px;
     border-radius: 8px;
     transition: all var(--transition-fast);
     margin-left: auto;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .event-expand-btn:active {
@@ -681,7 +687,7 @@ html, body {
 .event-row-date {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #808080;
+    color: #a0a0a0;
     min-width: 50px;
     letter-spacing: 0.02em;
 }
@@ -704,8 +710,8 @@ html, body {
 .event-action-btn {
     background: none;
     border: none;
-    color: #505050;
-    font-size: 0.8rem;
+    color: #a0a0a0;
+    font-size: 0.9rem;
     cursor: pointer;
     padding: 6px;
     border-radius: 4px;
@@ -716,7 +722,7 @@ html, body {
 }
 
 .event-action-btn:hover {
-    color: #909090;
+    color: #c0c0c0;
 }
 
 .event-action-btn.confirm-delete {

@@ -547,7 +547,7 @@ function init() {
 
 const GITHUB_EVENTS_FILE = 'data/events.json';
 const FILTER_STATES = ['all', 'oo', 'rec', 'completed'];
-const FILTER_LABELS = { all: 'ALL', oo: 'OO', rec: 'REC', completed: 'DONE' };
+const FILTER_LABELS = { all: 'ALL', oo: '1 OFF', rec: 'RECURRENT', completed: 'DONE' };
 
 const eventsState = {
     oneoff: [],      // {id, date, text, completed}
