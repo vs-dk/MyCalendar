@@ -105,16 +105,16 @@ jobs:
             IS_WEEKEND=true
           fi
 
-          HAS_CUSTODY=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("custody")) then "ON" else "OFF" end) else "OFF" end')
+          HAS_CUSTODY=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("custody")) then "🟢" else "🔴" end) else "🔴" end')
           if [ "$IS_WEEKEND" = "true" ]; then
-            HAS_SCHOOL="OFF"
-            HAS_WORK="OFF"
+            HAS_SCHOOL="🔴"
+            HAS_WORK="🔴"
           else
-            HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "OFF" else "ON" end) else "ON" end')
-            HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "OFF" else "ON" end) else "ON" end')
+            HAS_SCHOOL=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("school")) then "🔴" else "🟢" end) else "🟢" end')
+            HAS_WORK=$(echo "$MARKERS" | jq -r --arg d "$TARGET_DATE" 'if .[$d] then (if (.[$d] | index("work")) then "🔴" else "🟢" end) else "🟢" end')
           fi
 
-          MESSAGE="Ella: $HAS_CUSTODY | School: $HAS_SCHOOL | Work: $HAS_WORK"
+          MESSAGE="Ella: $HAS_CUSTODY | S: $HAS_SCHOOL | W: $HAS_WORK"
           echo "Sending: $MESSAGE"
 
           curl -s \
