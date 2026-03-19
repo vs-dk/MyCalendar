@@ -491,25 +491,27 @@ html, body {
 #events-title {
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--text-header);
+    color: #909090;
     letter-spacing: -0.01em;
 }
 
 .event-collapse-btn {
-    background: none;
-    border: none;
-    color: #505050;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #909090;
     font-family: var(--font-family);
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 500;
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
     letter-spacing: 0.03em;
-    transition: color var(--transition-fast);
+    transition: all var(--transition-fast);
 }
 
 .event-collapse-btn:active {
-    color: #909090;
+    transform: scale(0.95);
+    background: #333;
 }
 
 /* Calendar collapsed state */
