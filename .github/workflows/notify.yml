@@ -120,24 +120,12 @@ jobs:
             EVENTS=$(cat data/events.json)
             TARGET_DAY=$(echo "$TARGET_DATE" | cut -d'-' -f3 | sed 's/^0//')
 
-            # Get one-off event texts
-            OO_TEXTS=$(echo "$EVENTS" | jq -r --arg d "$TARGET_DATE" '[.oneoff[] | select(.date == $d and .completed == false) | .text] | .[]')
-
-            # Get recurring event texts (match day of month, not completed)
-            REC_TEXTS=$(echo "$EVENTS" | jq -r --arg day "$TARGET_DAY" --arg d "$TARGET_DATE" '[.recurring[] | select(.day == ($day | tonumber) and ((.completed // []) | index($d) | not)) | .text] | .[]')
-
-            # Build event lines
-            while IFS= read -r line; do
-              [ -z "$line" ] && continue
-              EVENT_LINES="${EVENT_LINES}
-🟠 ${line}"
-            done <<< "$OO_TEXTS"
-
-            while IFS= read -r line; do
-              [ -z "$line" ] && continue
-              EVENT_LINES="${EVENT_LINES}
-🔴 ${line}"
-            done <<< "$REC_TEXTS"
+            # Build event lines with jq directly
+            EVENT_LINES=$(echo "$EVENTS" | jq -r --arg d "$TARGET_DATE" --arg day "$TARGET_DAY" '
+              ([.oneoff[] | select(.date == $d and .completed == false) | "🟠 " + .text] +
+               [.recurring[] | select(.day == ($day | tonumber) and ((.completed // []) | index($d) | not)) | "🔴 " + .text])
+              | join("\n")
+            ')
           fi
 
           HAS_EVENT=""
@@ -145,7 +133,7 @@ jobs:
             HAS_EVENT=" | Events: 🟡"
           fi
 
-          MESSAGE="Ella: $HAS_CUSTODY | S: $HAS_SCHOOL | W: $HAS_WORK${HAS_EVENT}${EVENT_LINES}"
+          MESSAGE=$(printf "%s%s" "Ella: $HAS_CUSTODY | S: $HAS_SCHOOL | W: $HAS_WORK${HAS_EVENT}" "$([ -n "$EVENT_LINES" ] && printf '\n%s' "$EVENT_LINES")")
           echo "Sending: $MESSAGE"
 
           curl -s \
