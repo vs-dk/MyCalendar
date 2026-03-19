@@ -41,6 +41,12 @@
       "date": "2026-03-22",
       "text": "3",
       "completed": true
+    },
+    {
+      "id": "mmxf6nwvz36q",
+      "date": "2026-03-25",
+      "text": "Amigo",
+      "completed": false
     }
   ],
   "recurring": [
