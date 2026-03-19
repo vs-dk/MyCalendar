@@ -95,8 +95,8 @@ html, body {
 }
 
 @keyframes monthFlash {
-    0% { color: #b8960c; }
-    40% { color: #b8960c; }
+    0% { color: #4a7ea8; }
+    40% { color: #4a7ea8; }
     100% { color: var(--text-header); }
 }
 
@@ -755,7 +755,6 @@ html, body {
     gap: 8px;
     margin-bottom: 12px;
     align-items: center;
-    justify-content: center;
 }
 
 .event-select {
@@ -770,6 +769,13 @@ html, body {
     -webkit-appearance: none;
     cursor: pointer;
     text-align: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.event-select-rec {
+    flex: 0;
+    min-width: 60px;
 }
 
 .modal-event-freq {
