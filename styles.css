@@ -652,6 +652,13 @@ html, body {
     background: #333;
 }
 
+/* Weekly separator */
+.events-week-sep {
+    height: 1px;
+    background: #333;
+    margin: 6px 0;
+}
+
 /* Event row */
 .event-row {
     display: flex;

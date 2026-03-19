@@ -804,6 +804,8 @@ function renderEventsList() {
         return;
     }
 
+    let lastWeek = null;
+
     for (const item of items) {
         // Insert "today" divider between past and future
         if (filter !== 'completed' && !pastDividerInserted && hasPast && item.sortDate >= today) {
@@ -812,7 +814,20 @@ function renderEventsList() {
             divider.innerHTML = '<span>upcoming</span>';
             list.appendChild(divider);
             pastDividerInserted = true;
+            lastWeek = null; // reset week tracking after divider
         }
+
+        // Weekly separator (ISO week: Monday-based)
+        const [iy, im, id] = item.sortDate.split('-').map(Number);
+        const itemDate = new Date(iy, im - 1, id);
+        const weekNum = Math.floor((itemDate.getTime() - new Date(iy, 0, 1).getTime()) / 604800000);
+        const weekKey = `${iy}-${weekNum}`;
+        if (lastWeek !== null && weekKey !== lastWeek) {
+            const sep = document.createElement('div');
+            sep.className = 'events-week-sep';
+            list.appendChild(sep);
+        }
+        lastWeek = weekKey;
 
         const row = document.createElement('div');
         row.className = `event-row type-${item.type}`;
