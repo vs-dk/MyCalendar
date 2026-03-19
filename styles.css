@@ -497,23 +497,21 @@ html, body {
 }
 
 .event-collapse-btn {
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    background: none;
+    border: none;
     color: #909090;
     font-family: var(--font-family);
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    padding: 8px 14px;
-    border-radius: 8px;
+    padding: 4px 0;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    transition: all var(--transition-fast);
+    transition: color var(--transition-fast);
 }
 
 .event-collapse-btn:active {
-    transform: scale(0.95);
-    background: #333;
+    color: #b0b0b0;
 }
 
 /* Calendar collapsed state */
@@ -604,7 +602,9 @@ html, body {
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    padding: 8px 14px;
+    padding: 8px 0;
+    width: 90px;
+    text-align: center;
     border-radius: 8px;
     transition: all var(--transition-fast);
     margin-left: auto;
@@ -743,9 +743,9 @@ html, body {
 }
 
 .modal-event-title {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 500;
-    color: var(--text-header);
+    color: #909090;
     margin-bottom: 16px;
     text-align: center;
 }
@@ -761,10 +761,10 @@ html, body {
 .event-select {
     background: #2a2a2a;
     border: 1px solid #3a3a3a;
-    color: #909090;
+    color: #a0a0a0;
     font-family: var(--font-family);
-    font-size: 0.8rem;
-    padding: 8px 6px;
+    font-size: 0.85rem;
+    padding: 10px 8px;
     border-radius: 8px;
     appearance: none;
     -webkit-appearance: none;
@@ -773,8 +773,8 @@ html, body {
 }
 
 .modal-event-freq {
-    font-size: 0.75rem;
-    color: #606060;
+    font-size: 0.8rem;
+    color: #707070;
 }
 
 .event-input {
@@ -783,7 +783,7 @@ html, body {
     border: 1px solid #3a3a3a;
     color: #b0b0b0;
     font-family: var(--font-family);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     padding: 10px 12px;
     border-radius: 8px;
     margin-bottom: 16px;
@@ -804,11 +804,11 @@ html, body {
 .event-btn {
     background: #2a2a2a;
     border: 1px solid #3a3a3a;
-    color: #808080;
+    color: #909090;
     font-family: var(--font-family);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    padding: 8px 16px;
+    padding: 10px 18px;
     border-radius: 8px;
     cursor: pointer;
     transition: all var(--transition-fast);

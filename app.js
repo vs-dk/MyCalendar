@@ -731,8 +731,9 @@ function getEventsList() {
             const start = filter === 'completed'
                 ? new Date(minCompleted.substring(0, 7) + '-01')
                 : new Date(startDate);
+            // For completed: scan up to 12 months ahead to catch future instances marked done
             const endDate = filter === 'completed'
-                ? new Date(today.substring(0, 7) + '-28')
+                ? new Date(addMonths(today, 12))
                 : new Date(maxDate);
 
             // Generate one instance per month
