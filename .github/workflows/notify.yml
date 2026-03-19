@@ -82,7 +82,7 @@ jobs:
                 -H "Title: MyCalendar" \
                 -H "Tags: sparkles" \
                 -H "Priority: high" \
-                -d "Ella: pick up from school" \
+                -d "Ella: pick up from school 🔥🔥🔥" \
                 https://ntfy.sh/mycalendar
             else
               echo "No pickup needed today (weekend=$IS_WEEKEND, custody=$HAS_CUSTODY, school_holiday=$HAS_SCHOOL_HOLIDAY)"
