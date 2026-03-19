@@ -1,11 +1,4 @@
 {
   "oneoff": [],
-  "recurring": [
-    {
-      "id": "mmxodgao9cam",
-      "day": 1,
-      "text": "Pay school",
-      "completed": []
-    }
-  ]
+  "recurring": []
 }
