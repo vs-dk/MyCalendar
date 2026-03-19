@@ -541,5 +541,568 @@ function init() {
     }
 }
 
+// ============================================
+//  EVENTS SYSTEM (One-off & Recurring)
+// ============================================
+
+const GITHUB_EVENTS_FILE = 'data/events.json';
+const FILTER_STATES = ['all', 'oo', 'rec', 'completed'];
+const FILTER_LABELS = { all: 'ALL', oo: 'OO', rec: 'REC', completed: 'DONE' };
+
+const eventsState = {
+    oneoff: [],      // {id, date, text, completed}
+    recurring: [],   // {id, day, text, completed: [dates]}
+    filterIndex: 0,
+    expanded: false,  // true = 12 months view
+    deleteConfirmId: null,
+};
+
+// ---- Events DOM refs ----
+const evDom = {
+    section: document.getElementById('events-section'),
+    list: document.getElementById('events-list'),
+    dividerPast: document.getElementById('events-divider-past'),
+    btnAddOO: document.getElementById('btn-add-oo'),
+    btnAddRec: document.getElementById('btn-add-rec'),
+    btnFilter: document.getElementById('btn-filter'),
+    btnExpand: document.getElementById('btn-expand'),
+    // OO modal
+    ooOverlay: document.getElementById('modal-oo-overlay'),
+    ooYear: document.getElementById('oo-year'),
+    ooMonth: document.getElementById('oo-month'),
+    ooDay: document.getElementById('oo-day'),
+    ooText: document.getElementById('oo-text'),
+    ooSave: document.getElementById('oo-save'),
+    ooCancel: document.getElementById('oo-cancel'),
+    // REC modal
+    recOverlay: document.getElementById('modal-rec-overlay'),
+    recDay: document.getElementById('rec-day'),
+    recText: document.getElementById('rec-text'),
+    recSave: document.getElementById('rec-save'),
+    recCancel: document.getElementById('rec-cancel'),
+    // Detail modal
+    detailOverlay: document.getElementById('modal-event-detail-overlay'),
+    detailTitle: document.getElementById('detail-title'),
+    detailDate: document.getElementById('detail-date'),
+    detailText: document.getElementById('detail-text'),
+    detailDelete: document.getElementById('detail-delete'),
+    detailDone: document.getElementById('detail-done'),
+    detailClose: document.getElementById('detail-close'),
+};
+
+// ---- Events helpers ----
+
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function todayStr() {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+}
+
+function addMonths(dateStr, months) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const date = new Date(y, m - 1 + months, d);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function formatDateShort(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return `${d} ${MONTHS_SHORT[m - 1]}`;
+}
+
+function daysInMonthNum(year, month) {
+    return new Date(year, month, 0).getDate();
+}
+
+// ---- Events persistence ----
+
+function saveEvents() {
+    const data = {
+        oneoff: eventsState.oneoff,
+        recurring: eventsState.recurring,
+    };
+    localStorage.setItem('calendar-events', JSON.stringify(data));
+    syncEventsToGitHub(data);
+}
+
+function loadEvents() {
+    try {
+        const raw = localStorage.getItem('calendar-events');
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            eventsState.oneoff = parsed.oneoff || [];
+            eventsState.recurring = parsed.recurring || [];
+        }
+    } catch (e) {
+        console.warn('Failed to load events:', e);
+    }
+    loadEventsFromGitHub();
+}
+
+async function loadEventsFromGitHub() {
+    const token = getGitHubToken();
+    if (!token) return;
+
+    try {
+        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_EVENTS_FILE}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const parsed = JSON.parse(atob(data.content));
+
+        eventsState.oneoff = parsed.oneoff || [];
+        eventsState.recurring = parsed.recurring || [];
+
+        localStorage.setItem('calendar-events', JSON.stringify(parsed));
+        renderEventsList();
+    } catch (e) {
+        console.warn('GitHub events load failed, using local data:', e);
+    }
+}
+
+async function syncEventsToGitHub(data) {
+    const token = getGitHubToken();
+    if (!token) return;
+
+    try {
+        let sha = null;
+        const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_EVENTS_FILE}`, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (getRes.ok) {
+            const existing = await getRes.json();
+            sha = existing.sha;
+        }
+
+        const body = {
+            message: 'sync events',
+            content: btoa(JSON.stringify(data, null, 2)),
+        };
+        if (sha) body.sha = sha;
+
+        await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_EVENTS_FILE}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+    } catch (e) {
+        console.warn('GitHub events sync failed:', e);
+    }
+}
+
+// ---- Generate flat list of events for display ----
+
+function getEventsList() {
+    const today = todayStr();
+    const maxDate = eventsState.expanded ? addMonths(today, 12) : addMonths(today, 1);
+    // For completed view: show last 3 months
+    const minCompleted = addMonths(today, -3);
+
+    const filter = FILTER_STATES[eventsState.filterIndex];
+    const items = [];
+
+    // One-off events
+    if (filter !== 'rec') {
+        for (const ev of eventsState.oneoff) {
+            if (filter === 'completed') {
+                if (ev.completed && ev.date >= minCompleted) {
+                    items.push({ ...ev, type: 'oo', sortDate: ev.date });
+                }
+            } else {
+                if (!ev.completed && ev.date <= maxDate) {
+                    items.push({ ...ev, type: 'oo', sortDate: ev.date });
+                }
+            }
+        }
+    }
+
+    // Recurring events — expand into instances
+    if (filter !== 'oo') {
+        for (const ev of eventsState.recurring) {
+            const startDate = new Date(today.substring(0, 7) + '-01'); // 1st of current month
+            const start = filter === 'completed'
+                ? new Date(minCompleted.substring(0, 7) + '-01')
+                : new Date(startDate);
+            const endDate = filter === 'completed'
+                ? new Date(today.substring(0, 7) + '-28')
+                : new Date(maxDate);
+
+            // Generate one instance per month
+            const d = new Date(start);
+            while (d <= endDate) {
+                const y = d.getFullYear();
+                const m = d.getMonth() + 1;
+                const maxDay = daysInMonthNum(y, m);
+                const actualDay = Math.min(ev.day, maxDay);
+                const instanceDate = `${y}-${String(m).padStart(2, '0')}-${String(actualDay).padStart(2, '0')}`;
+                const isCompleted = (ev.completed || []).includes(instanceDate);
+
+                if (filter === 'completed') {
+                    if (isCompleted) {
+                        items.push({ id: ev.id, date: instanceDate, text: ev.text, type: 'rec', sortDate: instanceDate, recId: ev.id, completed: true });
+                    }
+                } else {
+                    if (!isCompleted && instanceDate <= maxDate) {
+                        items.push({ id: ev.id, date: instanceDate, text: ev.text, type: 'rec', sortDate: instanceDate, recId: ev.id, completed: false });
+                    }
+                }
+
+                d.setMonth(d.getMonth() + 1);
+            }
+        }
+    }
+
+    // Sort
+    if (filter === 'completed') {
+        items.sort((a, b) => b.sortDate.localeCompare(a.sortDate)); // newest first
+    } else {
+        items.sort((a, b) => a.sortDate.localeCompare(b.sortDate)); // chronological
+    }
+
+    return items;
+}
+
+// ---- Render events list ----
+
+function renderEventsList() {
+    const list = evDom.list;
+    list.innerHTML = '';
+    eventsState.deleteConfirmId = null;
+
+    const filter = FILTER_STATES[eventsState.filterIndex];
+    evDom.btnFilter.textContent = FILTER_LABELS[filter];
+    evDom.btnFilter.classList.toggle('active', filter !== 'all');
+    evDom.btnExpand.classList.toggle('expanded', eventsState.expanded);
+
+    const items = getEventsList();
+    const today = todayStr();
+
+    // Show/hide past divider
+    const hasPast = filter !== 'completed' && items.some(i => i.sortDate < today);
+    const hasFuture = filter !== 'completed' && items.some(i => i.sortDate >= today);
+    evDom.dividerPast.classList.toggle('hidden', !hasPast);
+
+    let pastDividerInserted = false;
+
+    if (items.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'event-row';
+        empty.style.justifyContent = 'center';
+        empty.style.opacity = '0.3';
+        empty.innerHTML = '<span class="event-row-text" style="text-align:center">No events</span>';
+        list.appendChild(empty);
+        return;
+    }
+
+    for (const item of items) {
+        // Insert "today" divider between past and future
+        if (filter !== 'completed' && !pastDividerInserted && hasPast && item.sortDate >= today) {
+            const divider = document.createElement('div');
+            divider.className = 'events-divider';
+            divider.innerHTML = '<span>upcoming</span>';
+            list.appendChild(divider);
+            pastDividerInserted = true;
+        }
+
+        const row = document.createElement('div');
+        row.className = `event-row type-${item.type}`;
+        if (item.completed) row.classList.add('completed');
+
+        const dateSpan = document.createElement('span');
+        dateSpan.className = 'event-row-date';
+        dateSpan.textContent = formatDateShort(item.sortDate);
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'event-row-text';
+        textSpan.textContent = item.text || '(no description)';
+
+        const actions = document.createElement('div');
+        actions.className = 'event-row-actions';
+
+        if (filter !== 'completed') {
+            // Done button
+            const doneBtn = document.createElement('button');
+            doneBtn.className = 'event-action-btn';
+            doneBtn.textContent = '✓';
+            doneBtn.title = 'Mark done';
+            doneBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                completeEvent(item);
+            });
+            actions.appendChild(doneBtn);
+
+            // Delete button
+            const delBtn = document.createElement('button');
+            delBtn.className = 'event-action-btn';
+            delBtn.textContent = '✕';
+            delBtn.title = 'Delete';
+            delBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleDelete(item, delBtn);
+            });
+            actions.appendChild(delBtn);
+        }
+
+        row.appendChild(dateSpan);
+        row.appendChild(textSpan);
+        row.appendChild(actions);
+
+        // Tap row to see detail
+        row.addEventListener('click', () => openDetailModal(item));
+
+        list.appendChild(row);
+    }
+}
+
+// ---- Event actions ----
+
+function completeEvent(item) {
+    if (item.type === 'oo') {
+        const ev = eventsState.oneoff.find(e => e.id === item.id);
+        if (ev) ev.completed = true;
+    } else {
+        const ev = eventsState.recurring.find(e => e.id === (item.recId || item.id));
+        if (ev) {
+            if (!ev.completed) ev.completed = [];
+            if (!ev.completed.includes(item.date)) {
+                ev.completed.push(item.date);
+            }
+        }
+    }
+    saveEvents();
+    renderEventsList();
+}
+
+function handleDelete(item, btn) {
+    const confirmKey = `${item.id}-${item.date}`;
+    if (eventsState.deleteConfirmId === confirmKey) {
+        // Second tap — delete
+        if (item.type === 'oo') {
+            eventsState.oneoff = eventsState.oneoff.filter(e => e.id !== item.id);
+        } else {
+            eventsState.recurring = eventsState.recurring.filter(e => e.id !== (item.recId || item.id));
+        }
+        eventsState.deleteConfirmId = null;
+        saveEvents();
+        renderEventsList();
+    } else {
+        // First tap — confirm
+        eventsState.deleteConfirmId = confirmKey;
+        btn.className = 'event-action-btn confirm-delete';
+        btn.textContent = 'Sure?';
+        // Reset after 3s
+        setTimeout(() => {
+            if (eventsState.deleteConfirmId === confirmKey) {
+                eventsState.deleteConfirmId = null;
+                btn.className = 'event-action-btn';
+                btn.textContent = '✕';
+            }
+        }, 3000);
+    }
+}
+
+// ---- Detail modal ----
+
+let detailItem = null;
+
+function openDetailModal(item) {
+    detailItem = item;
+    evDom.detailTitle.textContent = item.type === 'oo' ? 'One-off event' : 'Recurring event';
+    evDom.detailDate.textContent = formatDateShort(item.date);
+    evDom.detailText.textContent = item.text || '(no description)';
+
+    evDom.detailDone.classList.toggle('hidden', item.completed);
+    evDom.detailDelete.classList.toggle('hidden', FILTER_STATES[eventsState.filterIndex] === 'completed');
+
+    evDom.detailOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => evDom.detailOverlay.classList.add('visible'));
+}
+
+function closeDetailModal() {
+    evDom.detailOverlay.classList.remove('visible');
+    setTimeout(() => evDom.detailOverlay.classList.add('hidden'), 250);
+    detailItem = null;
+}
+
+// ---- OO Modal ----
+
+function populateOOModal() {
+    const now = new Date();
+    const curYear = now.getFullYear();
+
+    // Years: current and next
+    evDom.ooYear.innerHTML = '';
+    for (let y = curYear; y <= curYear + 1; y++) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        evDom.ooYear.appendChild(opt);
+    }
+
+    // Months
+    evDom.ooMonth.innerHTML = '';
+    for (let m = 1; m <= 12; m++) {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = MONTHS_SHORT[m - 1];
+        evDom.ooMonth.appendChild(opt);
+    }
+
+    // Set defaults to today
+    evDom.ooYear.value = curYear;
+    evDom.ooMonth.value = now.getMonth() + 1;
+    updateOODays();
+    evDom.ooDay.value = now.getDate();
+    evDom.ooText.value = '';
+}
+
+function updateOODays() {
+    const y = parseInt(evDom.ooYear.value);
+    const m = parseInt(evDom.ooMonth.value);
+    const max = daysInMonthNum(y, m);
+    const prev = parseInt(evDom.ooDay.value) || 1;
+
+    evDom.ooDay.innerHTML = '';
+    for (let d = 1; d <= max; d++) {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        evDom.ooDay.appendChild(opt);
+    }
+    evDom.ooDay.value = Math.min(prev, max);
+}
+
+function openOOModal() {
+    populateOOModal();
+    evDom.ooOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => evDom.ooOverlay.classList.add('visible'));
+}
+
+function closeOOModal() {
+    evDom.ooOverlay.classList.remove('visible');
+    setTimeout(() => evDom.ooOverlay.classList.add('hidden'), 250);
+}
+
+function saveOO() {
+    const y = evDom.ooYear.value;
+    const m = String(evDom.ooMonth.value).padStart(2, '0');
+    const d = String(evDom.ooDay.value).padStart(2, '0');
+    const date = `${y}-${m}-${d}`;
+    const text = evDom.ooText.value.trim();
+
+    eventsState.oneoff.push({
+        id: generateId(),
+        date,
+        text,
+        completed: false,
+    });
+
+    saveEvents();
+    closeOOModal();
+    renderEventsList();
+}
+
+// ---- REC Modal ----
+
+function populateRECModal() {
+    evDom.recDay.innerHTML = '';
+    for (let d = 1; d <= 31; d++) {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        evDom.recDay.appendChild(opt);
+    }
+    evDom.recDay.value = 1;
+    evDom.recText.value = '';
+}
+
+function openRECModal() {
+    populateRECModal();
+    evDom.recOverlay.classList.remove('hidden');
+    requestAnimationFrame(() => evDom.recOverlay.classList.add('visible'));
+}
+
+function closeRECModal() {
+    evDom.recOverlay.classList.remove('visible');
+    setTimeout(() => evDom.recOverlay.classList.add('hidden'), 250);
+}
+
+function saveREC() {
+    const day = parseInt(evDom.recDay.value);
+    const text = evDom.recText.value.trim();
+
+    eventsState.recurring.push({
+        id: generateId(),
+        day,
+        text,
+        completed: [],
+    });
+
+    saveEvents();
+    closeRECModal();
+    renderEventsList();
+}
+
+// ---- Events event listeners ----
+
+function initEventsListeners() {
+    evDom.btnAddOO.addEventListener('click', openOOModal);
+    evDom.btnAddRec.addEventListener('click', openRECModal);
+
+    evDom.btnFilter.addEventListener('click', () => {
+        eventsState.filterIndex = (eventsState.filterIndex + 1) % FILTER_STATES.length;
+        renderEventsList();
+    });
+
+    evDom.btnExpand.addEventListener('click', () => {
+        eventsState.expanded = !eventsState.expanded;
+        renderEventsList();
+    });
+
+    // OO modal
+    evDom.ooYear.addEventListener('change', updateOODays);
+    evDom.ooMonth.addEventListener('change', updateOODays);
+    evDom.ooSave.addEventListener('click', saveOO);
+    evDom.ooCancel.addEventListener('click', closeOOModal);
+    evDom.ooOverlay.addEventListener('click', (e) => { if (e.target === evDom.ooOverlay) closeOOModal(); });
+
+    // REC modal
+    evDom.recSave.addEventListener('click', saveREC);
+    evDom.recCancel.addEventListener('click', closeRECModal);
+    evDom.recOverlay.addEventListener('click', (e) => { if (e.target === evDom.recOverlay) closeRECModal(); });
+
+    // Detail modal
+    evDom.detailClose.addEventListener('click', closeDetailModal);
+    evDom.detailOverlay.addEventListener('click', (e) => { if (e.target === evDom.detailOverlay) closeDetailModal(); });
+    evDom.detailDone.addEventListener('click', () => {
+        if (detailItem) {
+            completeEvent(detailItem);
+            closeDetailModal();
+        }
+    });
+    evDom.detailDelete.addEventListener('click', () => {
+        if (detailItem) {
+            if (detailItem.type === 'oo') {
+                eventsState.oneoff = eventsState.oneoff.filter(e => e.id !== detailItem.id);
+            } else {
+                eventsState.recurring = eventsState.recurring.filter(e => e.id !== (detailItem.recId || detailItem.id));
+            }
+            saveEvents();
+            renderEventsList();
+            closeDetailModal();
+        }
+    });
+}
+
 // Start the app
 init();
+loadEvents();
+initEventsListeners();
+renderEventsList();

@@ -53,7 +53,7 @@ html, body {
     font-family: var(--font-family);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow: hidden;
+    overflow-x: hidden;
     touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
@@ -468,6 +468,294 @@ html, body {
     100% { opacity: 1; transform: translateX(0); }
 }
 
+/* --- Events Section --- */
+#events-section {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#events-toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 0 4px 8px;
+    align-items: center;
+}
+
+.event-add-btn {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #808080;
+    font-family: var(--font-family);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    letter-spacing: 0.05em;
+}
+
+.event-add-btn:active {
+    transform: scale(0.95);
+}
+
+.event-filter-btn {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #808080;
+    font-family: var(--font-family);
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    letter-spacing: 0.05em;
+    margin-left: auto;
+}
+
+.event-filter-btn.active {
+    border-color: #606060;
+    color: #b0b0b0;
+}
+
+.event-expand-btn {
+    background: none;
+    border: none;
+    color: #505050;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 6px;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.event-expand-btn.expanded {
+    transform: rotate(180deg);
+    color: #808080;
+}
+
+#events-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 4px;
+    scrollbar-width: none;
+}
+
+#events-list::-webkit-scrollbar {
+    width: 0;
+}
+
+/* Events divider (past/future separator) */
+.events-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 4px 6px;
+    font-size: 0.6rem;
+    color: #505050;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.events-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #333;
+}
+
+/* Event row */
+.event-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+    gap: 10px;
+}
+
+.event-row.type-oo {
+    background: rgba(180, 100, 30, 0.15);
+    border-left: 3px solid rgba(180, 100, 30, 0.4);
+}
+
+.event-row.type-rec {
+    background: rgba(120, 30, 50, 0.15);
+    border-left: 3px solid rgba(120, 30, 50, 0.4);
+}
+
+.event-row.completed {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+.event-row-date {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #707070;
+    min-width: 46px;
+    letter-spacing: 0.02em;
+}
+
+.event-row-text {
+    font-size: 0.75rem;
+    color: #909090;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.event-row-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.event-action-btn {
+    background: none;
+    border: none;
+    color: #505050;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color var(--transition-fast);
+    line-height: 1;
+}
+
+.event-action-btn:hover {
+    color: #909090;
+}
+
+.event-action-btn.confirm-delete {
+    color: #c04040;
+    font-size: 0.6rem;
+    font-weight: 600;
+}
+
+/* Event modals */
+.modal-event {
+    width: 280px;
+}
+
+.modal-event-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-header);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.modal-event-date {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-select {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #909090;
+    font-family: var(--font-family);
+    font-size: 0.8rem;
+    padding: 8px 6px;
+    border-radius: 8px;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.modal-event-freq {
+    font-size: 0.75rem;
+    color: #606060;
+}
+
+.event-input {
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #b0b0b0;
+    font-family: var(--font-family);
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.event-input:focus {
+    border-color: #505050;
+}
+
+.modal-event-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.event-btn {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #808080;
+    font-family: var(--font-family);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.event-btn:active {
+    transform: scale(0.95);
+}
+
+.event-btn-save {
+    background: rgba(60, 120, 60, 0.2);
+    border-color: rgba(60, 120, 60, 0.4);
+    color: #60a060;
+}
+
+.event-btn-delete {
+    background: rgba(120, 40, 40, 0.2);
+    border-color: rgba(120, 40, 40, 0.4);
+    color: #c06060;
+    margin-right: auto;
+}
+
+.event-btn-done {
+    background: rgba(60, 100, 140, 0.2);
+    border-color: rgba(60, 100, 140, 0.4);
+    color: #6090c0;
+}
+
+/* Event detail modal */
+.modal-event-detail-date {
+    font-size: 0.8rem;
+    color: #707070;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.modal-event-detail-text {
+    font-size: 0.85rem;
+    color: #a0a0a0;
+    text-align: center;
+    margin-bottom: 16px;
+    min-height: 20px;
+}
+
 /* --- Desktop adjustments --- */
 @media (min-width: 768px) {
     #app {
@@ -480,6 +768,10 @@ html, body {
 
     #month-year-label {
         font-size: 1.5rem;
+    }
+
+    #events-section {
+        display: none;
     }
 }
 
