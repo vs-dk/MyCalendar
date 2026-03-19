@@ -817,14 +817,12 @@ function renderEventsList() {
             lastWeek = null; // reset week tracking after divider
         }
 
-        // Weekly separator (ISO week: Monday-based)
+        // Weekly separator (Monday-based)
+        // Calculate days since epoch Monday (1970-01-05 was a Monday)
         const [iy, im, id] = item.sortDate.split('-').map(Number);
-        const itemDate = new Date(iy, im - 1, id);
-        // Get Monday of this item's week
-        const dow = (itemDate.getDay() + 6) % 7; // 0=Mon
-        const monday = new Date(itemDate);
-        monday.setDate(monday.getDate() - dow);
-        const weekKey = `${monday.getFullYear()}-${String(monday.getMonth()+1).padStart(2,'0')}-${String(monday.getDate()).padStart(2,'0')}`;
+        const itemMs = Date.UTC(iy, im - 1, id);
+        const epochMonday = Date.UTC(1970, 0, 5); // first Monday of epoch
+        const weekKey = Math.floor((itemMs - epochMonday) / 604800000);
         if (lastWeek !== null && weekKey !== lastWeek) {
             const sep = document.createElement('div');
             sep.className = 'events-week-sep';
