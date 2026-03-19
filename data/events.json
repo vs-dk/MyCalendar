@@ -19,5 +19,12 @@
       "completed": false
     }
   ],
-  "recurring": []
+  "recurring": [
+    {
+      "id": "mmxbnwxt9ber",
+      "day": 1,
+      "text": "Pay crochet",
+      "completed": []
+    }
+  ]
 }
