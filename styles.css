@@ -484,9 +484,9 @@ html, body {
     font-weight: 500;
     color: var(--text-header);
     letter-spacing: -0.01em;
-    padding-bottom: 10px;
+    padding-bottom: 4px;
     margin-bottom: 10px;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 2px solid #333;
 }
 
 #events-toolbar {
@@ -522,7 +522,9 @@ html, body {
     font-family: var(--font-family);
     font-size: 0.7rem;
     font-weight: 600;
-    padding: 8px 12px;
+    padding: 8px 0;
+    width: 56px;
+    text-align: center;
     border-radius: 8px;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -556,11 +558,15 @@ html, body {
     background: #2a2a2a;
     border: 1px solid #3a3a3a;
     color: #606060;
-    font-size: 0.7rem;
+    font-family: var(--font-family);
+    font-size: 0.65rem;
+    font-weight: 500;
     cursor: pointer;
     padding: 8px 10px;
     border-radius: 8px;
     transition: all var(--transition-fast);
+    margin-left: auto;
+    letter-spacing: 0.03em;
 }
 
 .event-expand-btn:active {
@@ -569,7 +575,6 @@ html, body {
 }
 
 .event-expand-btn.expanded {
-    transform: rotate(180deg);
     color: #909090;
     border-color: #505050;
 }
@@ -614,6 +619,14 @@ html, body {
     cursor: pointer;
     transition: opacity var(--transition-fast);
     gap: 10px;
+}
+
+.event-row:active {
+    opacity: 0.7;
+}
+
+.event-row {
+    -webkit-tap-highlight-color: rgba(80, 80, 80, 0.2);
 }
 
 .event-row.type-oo {
@@ -671,13 +684,13 @@ html, body {
 
 .event-action-btn.confirm-delete {
     color: #c04040;
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 600;
 }
 
 .event-action-btn.confirm-done {
     color: #50a050;
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 600;
 }
 
@@ -776,9 +789,9 @@ html, body {
 }
 
 .event-btn-done {
-    background: rgba(60, 100, 140, 0.2);
-    border-color: rgba(60, 100, 140, 0.4);
-    color: #6090c0;
+    background: rgba(50, 100, 50, 0.2);
+    border-color: rgba(50, 100, 50, 0.4);
+    color: #60a060;
 }
 
 /* Event detail modal */
