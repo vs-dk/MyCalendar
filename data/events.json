@@ -23,6 +23,12 @@
       "date": "2026-04-16",
       "text": "Presencial Meeting",
       "completed": false
+    },
+    {
+      "id": "mmxdoadqy000",
+      "date": "2026-05-19",
+      "text": "Eveheh",
+      "completed": false
     }
   ],
   "recurring": [
