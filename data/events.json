@@ -21,7 +21,7 @@
     {
       "id": "mmxg49k2yb6w",
       "date": "2026-03-20",
-      "text": "Test notificación",
+      "text": "Test notificaciÃ³n",
       "completed": false
     }
   ],
@@ -49,6 +49,12 @@
       "completed": [
         "2026-03-22"
       ]
+    },
+    {
+      "id": "mmxg8ubojl0b",
+      "day": 19,
+      "text": "Pay rent",
+      "completed": []
     }
   ]
 }
