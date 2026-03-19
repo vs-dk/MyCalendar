@@ -29,6 +29,12 @@
       "date": "2026-04-24",
       "text": "Docotr",
       "completed": false
+    },
+    {
+      "id": "mmxcf0v5ogj6",
+      "date": "2026-04-16",
+      "text": "Presencial Meeting",
+      "completed": false
     }
   ],
   "recurring": [
