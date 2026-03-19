@@ -25,5 +25,12 @@
       "completed": false
     }
   ],
-  "recurring": []
+  "recurring": [
+    {
+      "id": "mmxfreacattq",
+      "day": 1,
+      "text": "Pay flat",
+      "completed": []
+    }
+  ]
 }
