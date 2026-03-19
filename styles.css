@@ -479,24 +479,21 @@ html, body {
     padding: 0 4px;
 }
 
-#events-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
 #events-title {
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-header);
     letter-spacing: -0.01em;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #2a2a2a;
 }
 
 #events-toolbar {
     display: flex;
     gap: 8px;
     align-items: center;
+    margin-bottom: 12px;
 }
 
 .event-add-btn {
@@ -537,10 +534,22 @@ html, body {
     background: #333;
 }
 
-.event-filter-btn.active {
-    border-color: #505050;
-    color: #b0b0b0;
-    background: #303030;
+.event-filter-btn.filter-oo {
+    border-color: rgba(180, 100, 30, 0.5);
+    color: rgb(200, 120, 40);
+    background: rgba(180, 100, 30, 0.1);
+}
+
+.event-filter-btn.filter-rec {
+    border-color: rgba(140, 40, 55, 0.5);
+    color: rgb(170, 60, 70);
+    background: rgba(140, 40, 55, 0.1);
+}
+
+.event-filter-btn.filter-completed {
+    border-color: rgba(50, 100, 50, 0.5);
+    color: rgb(80, 140, 70);
+    background: rgba(50, 100, 50, 0.1);
 }
 
 .event-expand-btn {
@@ -617,10 +626,7 @@ html, body {
     border-left: 3px solid rgba(120, 30, 50, 0.4);
 }
 
-.event-row.completed {
-    opacity: 0.4;
-    text-decoration: line-through;
-}
+/* completed items keep normal styling — filter context is enough */
 
 .event-row-date {
     font-size: 0.65rem;
@@ -641,7 +647,7 @@ html, body {
 
 .event-row-actions {
     display: flex;
-    gap: 6px;
+    gap: 2px;
     flex-shrink: 0;
 }
 
@@ -651,10 +657,12 @@ html, body {
     color: #505050;
     font-size: 0.8rem;
     cursor: pointer;
-    padding: 4px;
+    padding: 6px;
     border-radius: 4px;
     transition: color var(--transition-fast);
     line-height: 1;
+    min-width: 36px;
+    text-align: center;
 }
 
 .event-action-btn:hover {
@@ -663,6 +671,12 @@ html, body {
 
 .event-action-btn.confirm-delete {
     color: #c04040;
+    font-size: 0.6rem;
+    font-weight: 600;
+}
+
+.event-action-btn.confirm-done {
+    color: #50a050;
     font-size: 0.6rem;
     font-weight: 600;
 }

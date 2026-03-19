@@ -555,6 +555,7 @@ const eventsState = {
     filterIndex: 0,
     expanded: false,  // true = 12 months view
     deleteConfirmId: null,
+    doneConfirmId: null,
 };
 
 // ---- Events DOM refs ----
@@ -774,10 +775,14 @@ function renderEventsList() {
     const list = evDom.list;
     list.innerHTML = '';
     eventsState.deleteConfirmId = null;
+    eventsState.doneConfirmId = null;
 
     const filter = FILTER_STATES[eventsState.filterIndex];
     evDom.btnFilter.textContent = FILTER_LABELS[filter];
-    evDom.btnFilter.classList.toggle('active', filter !== 'all');
+    evDom.btnFilter.classList.remove('filter-oo', 'filter-rec', 'filter-completed');
+    if (filter === 'oo') evDom.btnFilter.classList.add('filter-oo');
+    if (filter === 'rec') evDom.btnFilter.classList.add('filter-rec');
+    if (filter === 'completed') evDom.btnFilter.classList.add('filter-completed');
     evDom.btnExpand.classList.toggle('expanded', eventsState.expanded);
 
     const items = getEventsList();
@@ -808,7 +813,6 @@ function renderEventsList() {
 
         const row = document.createElement('div');
         row.className = `event-row type-${item.type}`;
-        if (item.completed) row.classList.add('completed');
 
         const dateSpan = document.createElement('span');
         dateSpan.className = 'event-row-date';
@@ -822,14 +826,14 @@ function renderEventsList() {
         actions.className = 'event-row-actions';
 
         if (filter !== 'completed') {
-            // Done button
+            // Done button (with double confirmation)
             const doneBtn = document.createElement('button');
             doneBtn.className = 'event-action-btn';
             doneBtn.textContent = '✓';
             doneBtn.title = 'Mark done';
             doneBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                completeEvent(item);
+                handleDone(item, doneBtn);
             });
             actions.appendChild(doneBtn);
 
@@ -873,6 +877,25 @@ function completeEvent(item) {
     }
     saveEvents();
     renderEventsList();
+}
+
+function handleDone(item, btn) {
+    const confirmKey = `${item.id}-${item.date}`;
+    if (eventsState.doneConfirmId === confirmKey) {
+        eventsState.doneConfirmId = null;
+        completeEvent(item);
+    } else {
+        eventsState.doneConfirmId = confirmKey;
+        btn.className = 'event-action-btn confirm-done';
+        btn.textContent = 'Sure?';
+        setTimeout(() => {
+            if (eventsState.doneConfirmId === confirmKey) {
+                eventsState.doneConfirmId = null;
+                btn.className = 'event-action-btn';
+                btn.textContent = '✓';
+            }
+        }, 3000);
+    }
 }
 
 function handleDelete(item, btn) {
