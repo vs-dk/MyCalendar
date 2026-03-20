@@ -17,6 +17,12 @@
       "date": "2026-03-20",
       "text": "Transferencia ING",
       "completed": false
+    },
+    {
+      "id": "mmyzth2t0jm2",
+      "date": "2026-03-27",
+      "text": "Double check NO payment CGP",
+      "completed": false
     }
   ],
   "recurring": []
