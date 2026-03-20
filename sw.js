@@ -3,7 +3,7 @@
    Handles offline caching for PWA installability
    ============================================ */
 
-const CACHE_NAME = 'custody-calendar-v6';
+const CACHE_NAME = 'custody-calendar-v7';
 const ASSETS = [
     './',
     './index.html',
@@ -12,7 +12,7 @@ const ASSETS = [
     './manifest.json',
 ];
 
-// Install — cache all assets
+// Install — cache all assets, skip waiting to activate immediately
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -22,7 +22,7 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-// Activate — clean old caches
+// Activate — clean old caches and take control immediately
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keys) => {
@@ -35,19 +35,27 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch — network first, fallback to cache (ensures updates are seen immediately)
+// Fetch — always network first, update cache, fallback to cache only if offline
 self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+
+    // Only handle same-origin requests
+    if (url.origin !== self.location.origin) return;
+
+    // Strip query string for cache key (so ?v=9 and ?v=10 hit same cache entry)
+    const cacheKey = new Request(url.pathname);
+
     event.respondWith(
         fetch(event.request).then((response) => {
             if (response.status === 200) {
                 const clone = response.clone();
                 caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, clone);
+                    cache.put(cacheKey, clone);
                 });
             }
             return response;
         }).catch(() => {
-            return caches.match(event.request);
+            return caches.match(cacheKey);
         })
     );
 });
