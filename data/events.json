@@ -49,6 +49,12 @@
       "day": 1,
       "text": "Pay rent",
       "completed": []
+    },
+    {
+      "id": "mmyzzhdu3ajs",
+      "day": 1,
+      "text": "Pay school",
+      "completed": []
     }
   ]
 }
