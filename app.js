@@ -312,6 +312,12 @@ function renderCalendar(direction = null) {
                 cell.classList.add('today');
             }
 
+            // Event indicator (circle around day number)
+            const dayEvents = getEventsForDate(key);
+            if (dayEvents.length > 0) {
+                cell.classList.add('has-events');
+            }
+
             // Editable state
             if (!state.isLocked) {
                 cell.classList.add('editable');
@@ -319,6 +325,9 @@ function renderCalendar(direction = null) {
                     toggleMarker(key, currentMode());
                     renderCalendar();
                 });
+            } else if (dayEvents.length > 0) {
+                // Locked + has events: show tooltip on tap
+                cell.addEventListener('click', () => showEventTooltip(cell, dayEvents));
             }
 
             // Store date info on cell
@@ -360,6 +369,43 @@ function renderModeButton() {
     dom.btnMode.classList.remove(...Object.values(MODE_CLASSES));
     // Add current mode class
     dom.btnMode.classList.add(MODE_CLASSES[mode]);
+}
+
+// ---- Event tooltip on calendar ----
+
+let activeTooltip = null;
+
+function showEventTooltip(cell, events) {
+    // Remove existing tooltip
+    if (activeTooltip) {
+        activeTooltip.remove();
+        activeTooltip = null;
+    }
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'event-tooltip';
+
+    for (const ev of events) {
+        const line = document.createElement('div');
+        line.className = 'event-tooltip-line';
+        const dot = ev.type === 'oo' ? '\uD83D\uDFE0' : '\uD83D\uDD34'; // 🟠 or 🔴
+        line.textContent = dot + ' ' + (ev.text || '(no description)');
+        tooltip.appendChild(line);
+    }
+
+    cell.style.position = 'relative';
+    cell.appendChild(tooltip);
+    activeTooltip = tooltip;
+
+    // Close on tap anywhere else
+    const close = (e) => {
+        if (!tooltip.contains(e.target) && e.target !== cell) {
+            tooltip.remove();
+            activeTooltip = null;
+            document.removeEventListener('click', close);
+        }
+    };
+    setTimeout(() => document.addEventListener('click', close), 10);
 }
 
 function renderAll() {
@@ -622,6 +668,28 @@ function formatDateShort(dateStr) {
 
 function daysInMonthNum(year, month) {
     return new Date(year, month, 0).getDate();
+}
+
+/** Check if a date has any events (one-off or recurring) */
+function getEventsForDate(dateStr) {
+    const events = [];
+    for (const ev of eventsState.oneoff) {
+        if (ev.date === dateStr && !ev.completed) {
+            events.push({ type: 'oo', text: ev.text });
+        }
+    }
+    const [y, m, d] = dateStr.split('-').map(Number);
+    for (const ev of eventsState.recurring) {
+        const maxDay = daysInMonthNum(y, m);
+        const actualDay = Math.min(ev.day, maxDay);
+        if (actualDay === d) {
+            const isCompleted = (ev.completed || []).includes(dateStr);
+            if (!isCompleted) {
+                events.push({ type: 'rec', text: ev.text });
+            }
+        }
+    }
+    return events;
 }
 
 // ---- Events persistence ----
