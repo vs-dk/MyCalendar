@@ -952,27 +952,34 @@ function handleDelete(item, btn) {
     }
 }
 
-// ---- Detail modal ----
+// ---- Detail modal (reuses OO/REC modals for editing) ----
 
-let detailItem = null;
+let editingEvent = null; // { type: 'oo'|'rec', id, recId? }
 
 function openDetailModal(item) {
-    detailItem = item;
-    evDom.detailTitle.textContent = item.type === 'oo' ? 'One-off event' : 'Recurring event';
-    evDom.detailDate.textContent = formatDateShort(item.date);
-    evDom.detailText.textContent = item.text || '(no description)';
-
-    evDom.detailDone.classList.toggle('hidden', item.completed);
-    evDom.detailDelete.classList.toggle('hidden', FILTER_STATES[eventsState.filterIndex] === 'completed');
-
-    evDom.detailOverlay.classList.remove('hidden');
-    requestAnimationFrame(() => evDom.detailOverlay.classList.add('visible'));
-}
-
-function closeDetailModal() {
-    evDom.detailOverlay.classList.remove('visible');
-    setTimeout(() => evDom.detailOverlay.classList.add('hidden'), 250);
-    detailItem = null;
+    if (item.type === 'oo') {
+        editingEvent = { type: 'oo', id: item.id };
+        populateOOModal();
+        // Pre-fill with existing data
+        const [y, m, d] = item.date.split('-').map(Number);
+        evDom.ooYear.value = y;
+        evDom.ooMonth.value = m;
+        updateOODays();
+        evDom.ooDay.value = d;
+        evDom.ooText.value = item.text || '';
+        evDom.ooOverlay.classList.remove('hidden');
+        requestAnimationFrame(() => evDom.ooOverlay.classList.add('visible'));
+    } else {
+        editingEvent = { type: 'rec', id: item.recId || item.id };
+        populateRECModal();
+        const ev = eventsState.recurring.find(e => e.id === editingEvent.id);
+        if (ev) {
+            evDom.recDay.value = ev.day;
+            evDom.recText.value = ev.text || '';
+        }
+        evDom.recOverlay.classList.remove('hidden');
+        requestAnimationFrame(() => evDom.recOverlay.classList.add('visible'));
+    }
 }
 
 // ---- OO Modal ----
@@ -1024,6 +1031,7 @@ function updateOODays() {
 }
 
 function openOOModal() {
+    editingEvent = null;
     populateOOModal();
     evDom.ooOverlay.classList.remove('hidden');
     requestAnimationFrame(() => evDom.ooOverlay.classList.add('visible'));
@@ -1032,6 +1040,7 @@ function openOOModal() {
 function closeOOModal() {
     evDom.ooOverlay.classList.remove('visible');
     setTimeout(() => evDom.ooOverlay.classList.add('hidden'), 250);
+    editingEvent = null;
 }
 
 function saveOO() {
@@ -1041,12 +1050,21 @@ function saveOO() {
     const date = `${y}-${m}-${d}`;
     const text = evDom.ooText.value.trim();
 
-    eventsState.oneoff.push({
-        id: generateId(),
-        date,
-        text,
-        completed: false,
-    });
+    if (editingEvent && editingEvent.type === 'oo') {
+        const ev = eventsState.oneoff.find(e => e.id === editingEvent.id);
+        if (ev) {
+            ev.date = date;
+            ev.text = text;
+        }
+        editingEvent = null;
+    } else {
+        eventsState.oneoff.push({
+            id: generateId(),
+            date,
+            text,
+            completed: false,
+        });
+    }
 
     saveEvents();
     closeOOModal();
@@ -1068,6 +1086,7 @@ function populateRECModal() {
 }
 
 function openRECModal() {
+    editingEvent = null;
     populateRECModal();
     evDom.recOverlay.classList.remove('hidden');
     requestAnimationFrame(() => evDom.recOverlay.classList.add('visible'));
@@ -1076,18 +1095,28 @@ function openRECModal() {
 function closeRECModal() {
     evDom.recOverlay.classList.remove('visible');
     setTimeout(() => evDom.recOverlay.classList.add('hidden'), 250);
+    editingEvent = null;
 }
 
 function saveREC() {
     const day = parseInt(evDom.recDay.value);
     const text = evDom.recText.value.trim();
 
-    eventsState.recurring.push({
-        id: generateId(),
-        day,
-        text,
-        completed: [],
-    });
+    if (editingEvent && editingEvent.type === 'rec') {
+        const ev = eventsState.recurring.find(e => e.id === editingEvent.id);
+        if (ev) {
+            ev.day = day;
+            ev.text = text;
+        }
+        editingEvent = null;
+    } else {
+        eventsState.recurring.push({
+            id: generateId(),
+            day,
+            text,
+            completed: [],
+        });
+    }
 
     saveEvents();
     closeRECModal();
@@ -1130,27 +1159,7 @@ function initEventsListeners() {
     evDom.recCancel.addEventListener('click', closeRECModal);
     evDom.recOverlay.addEventListener('click', (e) => { if (e.target === evDom.recOverlay) closeRECModal(); });
 
-    // Detail modal
-    evDom.detailClose.addEventListener('click', closeDetailModal);
-    evDom.detailOverlay.addEventListener('click', (e) => { if (e.target === evDom.detailOverlay) closeDetailModal(); });
-    evDom.detailDone.addEventListener('click', () => {
-        if (detailItem) {
-            completeEvent(detailItem);
-            closeDetailModal();
-        }
-    });
-    evDom.detailDelete.addEventListener('click', () => {
-        if (detailItem) {
-            if (detailItem.type === 'oo') {
-                eventsState.oneoff = eventsState.oneoff.filter(e => e.id !== detailItem.id);
-            } else {
-                eventsState.recurring = eventsState.recurring.filter(e => e.id !== (detailItem.recId || detailItem.id));
-            }
-            saveEvents();
-            renderEventsList();
-            closeDetailModal();
-        }
-    });
+    // Detail modal is no longer used — events open in OO/REC modals for editing
 }
 
 // Start the app
