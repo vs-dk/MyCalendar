@@ -43,5 +43,12 @@
       "completed": false
     }
   ],
-  "recurring": []
+  "recurring": [
+    {
+      "id": "mmyzz9iy3iju",
+      "day": 1,
+      "text": "Pay rent",
+      "completed": []
+    }
+  ]
 }
