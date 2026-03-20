@@ -857,7 +857,7 @@ function renderEventsList() {
             // Undo button
             const undoBtn = document.createElement('button');
             undoBtn.className = 'event-action-btn';
-            undoBtn.textContent = 'u';
+            undoBtn.textContent = 'undo';
             undoBtn.title = 'Undo';
             undoBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
