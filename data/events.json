@@ -41,6 +41,12 @@
       "date": "2026-03-20",
       "text": "Billetes MAD. Ultima Junio",
       "completed": false
+    },
+    {
+      "id": "mmz2i2hq30dj",
+      "date": "2026-04-08",
+      "text": "Checkin AMS",
+      "completed": false
     }
   ],
   "recurring": [
