@@ -9,7 +9,7 @@
     {
       "id": "mmyzrtd1l0kj",
       "date": "2026-03-20",
-      "text": "Billetes MAD último Junio",
+      "text": "Billetes MAD Ãºltimo Junio",
       "completed": false
     },
     {
@@ -40,6 +40,12 @@
       "id": "mmyzy4o944ze",
       "date": "2026-09-07",
       "text": "Dentista Ella. Limpieza+Rafa",
+      "completed": false
+    },
+    {
+      "id": "mmz06e3el766",
+      "date": "2026-03-20",
+      "text": "Billetes MAD. Última jinio",
       "completed": false
     }
   ],
