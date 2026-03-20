@@ -18,7 +18,7 @@
 
     /* Accent Colors */
     --color-custody: #a855f7;      /* Purple */
-    --color-school: #e0a020;       /* Orange */
+    --color-school: #e0d040;       /* Yellow */
     --color-work: #4a90e2;         /* Blue */
     --color-both-holidays: #35b868;/* Green */
     --color-today: #383838;        /* Today background (subtle gray) */
@@ -123,6 +123,30 @@ html, body {
 }
 
 .nav-btn:active {
+    transform: scale(0.92);
+}
+
+.today-btn {
+    display: none;
+    background: none;
+    border: 1px solid #3a3a3a;
+    color: #909090;
+    font-family: var(--font-family);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.today-btn:hover {
+    background: var(--bg-cell);
+    color: #e0e0e0;
+}
+
+.today-btn:active {
     transform: scale(0.92);
 }
 
@@ -866,6 +890,17 @@ html, body {
     min-height: 20px;
 }
 
+/* --- Mobile: hide arrows, show TODAY --- */
+@media (max-width: 767px) {
+    #nav-arrows {
+        display: none;
+    }
+
+    .today-btn {
+        display: block;
+    }
+}
+
 /* --- Desktop adjustments --- */
 @media (min-width: 768px) {
     #app {
@@ -878,6 +913,10 @@ html, body {
 
     #month-year-label {
         font-size: 1.5rem;
+    }
+
+    .today-btn {
+        display: none;
     }
 
     #events-section {

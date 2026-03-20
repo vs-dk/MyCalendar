@@ -32,6 +32,7 @@ const dom = {
     monthYearLabel: document.getElementById('month-year-label'),
     btnPrev: document.getElementById('btn-prev'),
     btnNext: document.getElementById('btn-next'),
+    btnToday: document.getElementById('btn-today'),
     calendarGrid: document.getElementById('calendar-grid'),
     btnLock: document.getElementById('btn-lock'),
     lockIcon: document.getElementById('lock-icon'),
@@ -463,6 +464,12 @@ function initEvents() {
     // Navigation arrows
     dom.btnPrev.addEventListener('click', prevMonth);
     dom.btnNext.addEventListener('click', nextMonth);
+
+    // Today button (mobile)
+    dom.btnToday.addEventListener('click', () => {
+        const now = new Date();
+        goToMonth(now.getFullYear(), now.getMonth(), null);
+    });
 
     // Month/year label → open modal
     dom.monthYearLabel.addEventListener('click', openModal);
