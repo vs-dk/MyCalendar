@@ -563,6 +563,7 @@ const eventsState = {
     expanded: false,  // true = 12 months view
     deleteConfirmId: null,
     doneConfirmId: null,
+    undoConfirmId: null,
 };
 
 // ---- Events DOM refs ----
@@ -785,6 +786,7 @@ function renderEventsList() {
     list.innerHTML = '';
     eventsState.deleteConfirmId = null;
     eventsState.doneConfirmId = null;
+    eventsState.undoConfirmId = null;
 
     const filter = FILTER_STATES[eventsState.filterIndex];
     evDom.btnFilter.textContent = FILTER_LABELS[filter];
@@ -851,7 +853,29 @@ function renderEventsList() {
         const actions = document.createElement('div');
         actions.className = 'event-row-actions';
 
-        if (filter !== 'completed') {
+        if (filter === 'completed') {
+            // Undo button
+            const undoBtn = document.createElement('button');
+            undoBtn.className = 'event-action-btn';
+            undoBtn.textContent = '↩';
+            undoBtn.title = 'Undo';
+            undoBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleUndo(item, undoBtn);
+            });
+            actions.appendChild(undoBtn);
+
+            // Delete button
+            const delBtn = document.createElement('button');
+            delBtn.className = 'event-action-btn';
+            delBtn.textContent = '✕';
+            delBtn.title = 'Delete';
+            delBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleDelete(item, delBtn);
+            });
+            actions.appendChild(delBtn);
+        } else {
             // Done button (with double confirmation)
             const doneBtn = document.createElement('button');
             doneBtn.className = 'event-action-btn';
@@ -903,6 +927,39 @@ function completeEvent(item) {
     }
     saveEvents();
     renderEventsList();
+}
+
+function undoComplete(item) {
+    if (item.type === 'oo') {
+        const ev = eventsState.oneoff.find(e => e.id === item.id);
+        if (ev) ev.completed = false;
+    } else {
+        const ev = eventsState.recurring.find(e => e.id === (item.recId || item.id));
+        if (ev && ev.completed) {
+            ev.completed = ev.completed.filter(d => d !== item.date);
+        }
+    }
+    saveEvents();
+    renderEventsList();
+}
+
+function handleUndo(item, btn) {
+    const confirmKey = `undo-${item.id}-${item.date}`;
+    if (eventsState.undoConfirmId === confirmKey) {
+        eventsState.undoConfirmId = null;
+        undoComplete(item);
+    } else {
+        eventsState.undoConfirmId = confirmKey;
+        btn.className = 'event-action-btn confirm-done';
+        btn.textContent = 'Sure?';
+        setTimeout(() => {
+            if (eventsState.undoConfirmId === confirmKey) {
+                eventsState.undoConfirmId = null;
+                btn.className = 'event-action-btn';
+                btn.textContent = '↩';
+            }
+        }, 3000);
+    }
 }
 
 function handleDone(item, btn) {
