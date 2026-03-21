@@ -1027,7 +1027,7 @@ html, body {
 
     .mini-weekdays {
         display: grid;
-        grid-template-columns: repeat(5, 1fr) 3px repeat(2, 1fr);
+        grid-template-columns: repeat(5, 1fr) 4px repeat(2, 1fr);
         gap: 0;
         padding: 0 0 4px;
     }
@@ -1045,8 +1045,8 @@ html, body {
 
     .mini-days-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr) 3px repeat(2, 1fr);
-        gap: 1px;
+        grid-template-columns: repeat(5, 1fr) 4px repeat(2, 1fr);
+        gap: 0;
     }
 
     .mini-day {
@@ -1066,9 +1066,8 @@ html, body {
     }
 
     .mini-day.weekend-gap {
-        background: var(--bg-cell);
+        background: var(--bg-app);
         pointer-events: none;
-        width: 3px;
     }
 
     .mini-day-number {
