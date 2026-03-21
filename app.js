@@ -641,21 +641,6 @@ function renderDesktopView() {
 
         miniMonth.appendChild(header);
 
-        // Weekday labels (with weekend gap)
-        const weekdays = document.createElement('div');
-        weekdays.className = 'mini-weekdays';
-        const dayLabels = ['M', 'T', 'W', 'T', 'F', '', 'S', 'S'];
-        for (const d of dayLabels) {
-            const s = document.createElement('span');
-            if (d === '') {
-                s.className = 'mini-weekday-gap';
-            } else {
-                s.textContent = d;
-            }
-            weekdays.appendChild(s);
-        }
-        miniMonth.appendChild(weekdays);
-
         // Days grid (8 cols: 5 weekdays + gap + 2 weekend)
         const grid = document.createElement('div');
         grid.className = 'mini-days-grid';
