@@ -244,7 +244,7 @@ html, body {
 /* Holiday dots — small dot below the number */
 .day-cell .marker-dot {
     position: absolute;
-    bottom: 8px;
+    bottom: 4px;
     left: 50%;
     transform: translateX(-50%);
     width: 5px;
@@ -285,7 +285,7 @@ html, body {
 /* --- Event indicator dot (above day number) --- */
 .event-dot {
     position: absolute;
-    top: 8px;
+    top: 4px;
     left: 50%;
     transform: translateX(-50%);
     width: 5px;

@@ -3,7 +3,7 @@
    Handles offline caching for PWA installability
    ============================================ */
 
-const CACHE_NAME = 'custody-calendar-v8';
+const CACHE_NAME = 'custody-calendar-v9';
 const ASSETS = [
     './',
     './index.html',
