@@ -1248,7 +1248,7 @@ function completeEvent(item) {
     }
     saveEvents();
     renderEventsList();
-    if (isDesktop()) renderDesktopView();
+    if (isDesktop()) renderDesktopView(); else renderCalendar();
 }
 
 function undoComplete(item) {
@@ -1263,7 +1263,7 @@ function undoComplete(item) {
     }
     saveEvents();
     renderEventsList();
-    if (isDesktop()) renderDesktopView();
+    if (isDesktop()) renderDesktopView(); else renderCalendar();
 }
 
 function handleUndo(item, btn) {
@@ -1316,7 +1316,7 @@ function handleDelete(item, btn) {
         eventsState.deleteConfirmId = null;
         saveEvents();
         renderEventsList();
-        if (isDesktop()) renderDesktopView();
+        if (isDesktop()) renderDesktopView(); else renderCalendar();
     } else {
         // First tap — confirm
         eventsState.deleteConfirmId = confirmKey;
@@ -1461,7 +1461,7 @@ function saveOO() {
     saveEvents();
     closeOOModal();
     renderEventsList();
-    if (isDesktop()) renderDesktopView();
+    if (isDesktop()) renderDesktopView(); else renderCalendar();
 }
 
 // ---- REC Modal (grid-based picker) ----
@@ -1524,7 +1524,7 @@ function saveREC() {
     saveEvents();
     closeRECModal();
     renderEventsList();
-    if (isDesktop()) renderDesktopView();
+    if (isDesktop()) renderDesktopView(); else renderCalendar();
 }
 
 // ---- Events event listeners ----

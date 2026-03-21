@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=29">
+    <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
     <div id="app">
@@ -139,12 +139,11 @@
             <!-- Recurring event modal -->
             <div id="modal-rec-overlay" class="modal-overlay hidden">
                 <div class="modal-picker modal-event modal-event-grid">
-                    <h3 class="modal-event-title">Recurring event</h3>
+                    <h3 class="modal-event-title">Recurring event (monthly)</h3>
                     <!-- Day grid 7 cols -->
                     <div id="rec-day-grid" class="picker-day-grid">
                         <!-- 31 day buttons rendered by JS -->
                     </div>
-                    <span class="modal-event-freq">of every month</span>
                     <input id="rec-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
                     <div class="modal-event-actions">
                         <button id="rec-cancel" class="event-btn event-btn-cancel">Cancel</button>
@@ -183,6 +182,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=20"></script>
+    <script src="app.js?v=21"></script>
 </body>
 </html>
