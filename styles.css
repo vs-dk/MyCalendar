@@ -1134,6 +1134,7 @@ html, body {
 
     /* FAB */
     #desktop-fab {
+        display: block;
         position: fixed;
         bottom: 24px;
         right: 24px;
