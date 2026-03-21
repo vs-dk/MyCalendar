@@ -976,7 +976,7 @@ html, body {
 
     #app {
         max-width: 100%;
-        padding: 20px 40px;
+        padding: 12px 24px;
         height: auto;
     }
 
@@ -1001,7 +1001,7 @@ html, body {
     #desktop-months-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
+        gap: 10px;
     }
 
     /* Mini month */
@@ -1022,12 +1022,12 @@ html, body {
     }
 
     .mini-month-header.current-month {
-        color: var(--color-custody);
+        color: #4a7ea8;
     }
 
     .mini-weekdays {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(5, 1fr) 3px repeat(2, 1fr);
         gap: 0;
         padding: 0 0 4px;
     }
@@ -1039,13 +1039,13 @@ html, body {
         text-transform: uppercase;
     }
 
-    .mini-weekdays .mini-weekend {
-        color: #3a3a3a;
+    .mini-weekday-gap {
+        display: block;
     }
 
     .mini-days-grid {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(5, 1fr) 3px repeat(2, 1fr);
         gap: 1px;
     }
 
@@ -1065,15 +1065,19 @@ html, body {
         pointer-events: none;
     }
 
+    .mini-day.weekend-gap {
+        background: var(--bg-cell);
+        pointer-events: none;
+        width: 3px;
+    }
+
     .mini-day-number {
         font-size: 0.7rem;
         color: var(--text-primary);
         line-height: 1;
     }
 
-    .mini-day.weekend .mini-day-number {
-        color: #505050;
-    }
+    /* weekends same color as weekdays for consistency */
 
     .mini-day.custody .mini-day-number {
         color: var(--color-custody);
@@ -1097,20 +1101,24 @@ html, body {
     }
 
     /* Mini dots */
-    .mini-dots {
-        display: flex;
-        gap: 2px;
+    .mini-marker-dot {
         position: absolute;
-        bottom: 1px;
-    }
-
-    .mini-marker-dot, .mini-event-dot {
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
         width: 3px;
         height: 3px;
         border-radius: 50%;
     }
 
-    .mini-event-dot {
+    .mini-event-dot-top {
+        position: absolute;
+        top: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
         background: #5a5a5a;
     }
 

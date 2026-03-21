@@ -641,93 +641,105 @@ function renderDesktopView() {
 
         miniMonth.appendChild(header);
 
-        // Weekday labels
+        // Weekday labels (with weekend gap)
         const weekdays = document.createElement('div');
         weekdays.className = 'mini-weekdays';
-        for (const d of ['M', 'T', 'W', 'T', 'F', 'S', 'S']) {
+        const dayLabels = ['M', 'T', 'W', 'T', 'F', '', 'S', 'S'];
+        for (const d of dayLabels) {
             const s = document.createElement('span');
-            s.textContent = d;
-            if (d === 'S') s.classList.add('mini-weekend');
+            if (d === '') {
+                s.className = 'mini-weekday-gap';
+            } else {
+                s.textContent = d;
+            }
             weekdays.appendChild(s);
         }
         miniMonth.appendChild(weekdays);
 
-        // Days grid
+        // Days grid (8 cols: 5 weekdays + gap + 2 weekend)
         const grid = document.createElement('div');
         grid.className = 'mini-days-grid';
 
         const totalDays = daysInMonth(year, month);
         const startDay = firstDayOfMonth(year, month);
+        const totalRows = Math.ceil((startDay + totalDays) / 7);
 
-        // Empty cells for days before the 1st
-        for (let i = 0; i < startDay; i++) {
-            const empty = document.createElement('div');
-            empty.className = 'mini-day empty';
-            grid.appendChild(empty);
-        }
+        let dayCounter = 1;
 
-        // Day cells
-        for (let day = 1; day <= totalDays; day++) {
-            const cell = document.createElement('div');
-            cell.className = 'mini-day';
-
-            const key = dateKey(year, month, day);
-            const markers = getMarkers(key);
-
-            if (markers.has('custody')) cell.classList.add('custody');
-            if (markers.has('school')) cell.classList.add('school-holiday');
-            if (markers.has('work')) cell.classList.add('work-holiday');
-
-            if (isToday(year, month, day)) cell.classList.add('today');
-
-            // Day of week (0=Mon, 5=Sat, 6=Sun)
-            const dow = (startDay + day - 1) % 7;
-            if (dow >= 5) cell.classList.add('weekend');
-
-            const daySpan = document.createElement('span');
-            daySpan.className = 'mini-day-number';
-            daySpan.textContent = day;
-            cell.appendChild(daySpan);
-
-            // Marker dots container
-            const dotsContainer = document.createElement('div');
-            dotsContainer.className = 'mini-dots';
-
-            if (markers.has('school') || markers.has('work')) {
-                const dot = document.createElement('div');
-                dot.className = 'mini-marker-dot';
-                if (markers.has('school') && markers.has('work')) {
-                    dot.style.background = 'var(--color-both-holidays)';
-                } else if (markers.has('school')) {
-                    dot.style.background = 'var(--color-school)';
-                } else {
-                    dot.style.background = 'var(--color-work)';
+        for (let row = 0; row < totalRows; row++) {
+            for (let col = 0; col < 8; col++) {
+                // Column 5 is the weekend gap
+                if (col === 5) {
+                    const gap = document.createElement('div');
+                    gap.className = 'mini-day weekend-gap';
+                    grid.appendChild(gap);
+                    continue;
                 }
-                dotsContainer.appendChild(dot);
+
+                const actualCol = col > 5 ? col - 1 : col;
+                const cellIndex = row * 7 + actualCol;
+
+                if (cellIndex < startDay || dayCounter > totalDays) {
+                    const empty = document.createElement('div');
+                    empty.className = 'mini-day empty';
+                    grid.appendChild(empty);
+                    continue;
+                }
+
+                const day = dayCounter++;
+                const cell = document.createElement('div');
+                cell.className = 'mini-day';
+
+                const key = dateKey(year, month, day);
+                const markers = getMarkers(key);
+
+                if (markers.has('custody')) cell.classList.add('custody');
+                if (markers.has('school')) cell.classList.add('school-holiday');
+                if (markers.has('work')) cell.classList.add('work-holiday');
+
+                if (isToday(year, month, day)) cell.classList.add('today');
+
+                // Event dot above number
+                const dayEvents = getEventsForDate(key);
+                if (dayEvents.length > 0) {
+                    const evDot = document.createElement('div');
+                    evDot.className = 'mini-event-dot-top';
+                    cell.appendChild(evDot);
+                }
+
+                const daySpan = document.createElement('span');
+                daySpan.className = 'mini-day-number';
+                daySpan.textContent = day;
+                cell.appendChild(daySpan);
+
+                // Marker dot below number
+                if (markers.has('school') || markers.has('work')) {
+                    const dot = document.createElement('div');
+                    dot.className = 'mini-marker-dot';
+                    if (markers.has('school') && markers.has('work')) {
+                        dot.style.background = 'var(--color-both-holidays)';
+                    } else if (markers.has('school')) {
+                        dot.style.background = 'var(--color-school)';
+                    } else {
+                        dot.style.background = 'var(--color-work)';
+                    }
+                    cell.appendChild(dot);
+                }
+
+                // Click handler
+                if (!state.isLocked) {
+                    cell.classList.add('editable');
+                    cell.addEventListener('click', () => {
+                        toggleMarker(key, currentMode());
+                        renderDesktopView();
+                    });
+                } else if (dayEvents.length > 0) {
+                    cell.classList.add('has-events');
+                    cell.addEventListener('click', () => showEventTooltip(cell, dayEvents, col));
+                }
+
+                grid.appendChild(cell);
             }
-
-            const dayEvents = getEventsForDate(key);
-            if (dayEvents.length > 0) {
-                const dot = document.createElement('div');
-                dot.className = 'mini-event-dot';
-                dotsContainer.appendChild(dot);
-            }
-
-            cell.appendChild(dotsContainer);
-
-            // Click handler
-            if (!state.isLocked) {
-                cell.classList.add('editable');
-                cell.addEventListener('click', () => {
-                    toggleMarker(key, currentMode());
-                    renderDesktopView();
-                });
-            } else if (dayEvents.length > 0) {
-                cell.classList.add('has-events');
-                cell.addEventListener('click', () => showEventTooltip(cell, dayEvents, dow));
-            }
-
-            grid.appendChild(cell);
         }
 
         miniMonth.appendChild(grid);
