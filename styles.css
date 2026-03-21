@@ -818,6 +818,110 @@ html, body {
     width: 280px;
 }
 
+.modal-event-grid {
+    width: 300px;
+}
+
+/* Picker year nav */
+.picker-year-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.picker-year-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-header);
+    min-width: 50px;
+    text-align: center;
+}
+
+.picker-nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-header);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background var(--transition-fast);
+    line-height: 1;
+}
+
+.picker-nav-btn:hover {
+    background: var(--bg-cell);
+}
+
+/* Month grid (3×4) */
+.picker-month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.picker-month-btn {
+    background: var(--bg-cell);
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    font-size: 0.7rem;
+    font-weight: 400;
+    padding: 7px 2px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.picker-month-btn:hover {
+    background: #333;
+}
+
+.picker-month-btn.selected {
+    background: #3a3a3a;
+    color: #d0d0d0;
+    font-weight: 500;
+}
+
+/* Day grid (7 cols) */
+.picker-day-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 12px;
+}
+
+.picker-day-btn {
+    background: var(--bg-cell);
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    font-size: 0.75rem;
+    padding: 7px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.picker-day-btn:hover {
+    background: #333;
+}
+
+.picker-day-btn.selected {
+    background: #3a3a3a;
+    color: #d0d0d0;
+    font-weight: 500;
+}
+
+.picker-day-btn.invalid {
+    opacity: 0.2;
+    pointer-events: none;
+}
+
 .modal-event-title {
     font-size: 0.9rem;
     font-weight: 500;
@@ -1320,13 +1424,8 @@ html, body {
         z-index: 10;
     }
 
-    #events-section .modal-event {
-        width: 260px;
-    }
-
-    #events-section .event-select {
-        font-size: 0.8rem;
-        padding: 8px 6px;
+    #events-section .modal-event-grid {
+        width: 290px;
     }
 
     /* Events FAB (left side) */

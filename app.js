@@ -875,15 +875,17 @@ const evDom = {
     btnExpand: document.getElementById('btn-expand'),
     // OO modal
     ooOverlay: document.getElementById('modal-oo-overlay'),
-    ooYear: document.getElementById('oo-year'),
-    ooMonth: document.getElementById('oo-month'),
-    ooDay: document.getElementById('oo-day'),
+    ooYearLabel: document.getElementById('oo-year-label'),
+    ooYearPrev: document.getElementById('oo-year-prev'),
+    ooYearNext: document.getElementById('oo-year-next'),
+    ooMonthGrid: document.getElementById('oo-month-grid'),
+    ooDayGrid: document.getElementById('oo-day-grid'),
     ooText: document.getElementById('oo-text'),
     ooSave: document.getElementById('oo-save'),
     ooCancel: document.getElementById('oo-cancel'),
     // REC modal
     recOverlay: document.getElementById('modal-rec-overlay'),
-    recDay: document.getElementById('rec-day'),
+    recDayGrid: document.getElementById('rec-day-grid'),
     recText: document.getElementById('rec-text'),
     recSave: document.getElementById('rec-save'),
     recCancel: document.getElementById('rec-cancel'),
@@ -1340,22 +1342,22 @@ let editingEvent = null; // { type: 'oo'|'rec', id, recId? }
 function openDetailModal(item) {
     if (item.type === 'oo') {
         editingEvent = { type: 'oo', id: item.id };
-        populateOOModal();
-        // Pre-fill with existing data
         const [y, m, d] = item.date.split('-').map(Number);
-        evDom.ooYear.value = y;
-        evDom.ooMonth.value = m;
-        updateOODays();
-        evDom.ooDay.value = d;
+        ooPick.year = y;
+        ooPick.month = m;
+        ooPick.day = d;
+        evDom.ooYearLabel.textContent = y;
+        renderOOMonthGrid();
+        renderOODayGrid();
         evDom.ooText.value = item.text || '';
         evDom.ooOverlay.classList.remove('hidden');
         requestAnimationFrame(() => evDom.ooOverlay.classList.add('visible'));
     } else {
         editingEvent = { type: 'rec', id: item.recId || item.id };
-        populateRECModal();
         const ev = eventsState.recurring.find(e => e.id === editingEvent.id);
         if (ev) {
-            evDom.recDay.value = ev.day;
+            recPick.day = ev.day;
+            renderRECDayGrid();
             evDom.recText.value = ev.text || '';
         }
         evDom.recOverlay.classList.remove('hidden');
@@ -1363,52 +1365,53 @@ function openDetailModal(item) {
     }
 }
 
-// ---- OO Modal ----
+// ---- OO Modal (grid-based pickers) ----
+
+const ooPick = { year: 0, month: 0, day: 0 };
+
+function renderOOMonthGrid() {
+    evDom.ooMonthGrid.innerHTML = '';
+    for (let m = 1; m <= 12; m++) {
+        const btn = document.createElement('button');
+        btn.className = 'picker-month-btn' + (m === ooPick.month ? ' selected' : '');
+        btn.textContent = MONTHS_SHORT[m - 1];
+        btn.addEventListener('click', () => {
+            ooPick.month = m;
+            renderOOMonthGrid();
+            renderOODayGrid();
+        });
+        evDom.ooMonthGrid.appendChild(btn);
+    }
+}
+
+function renderOODayGrid() {
+    evDom.ooDayGrid.innerHTML = '';
+    const max = daysInMonthNum(ooPick.year, ooPick.month);
+    if (ooPick.day > max) ooPick.day = max;
+    for (let d = 1; d <= 31; d++) {
+        const btn = document.createElement('button');
+        btn.className = 'picker-day-btn';
+        btn.textContent = d;
+        if (d === ooPick.day) btn.classList.add('selected');
+        if (d > max) btn.classList.add('invalid');
+        btn.addEventListener('click', () => {
+            if (d > max) return;
+            ooPick.day = d;
+            renderOODayGrid();
+        });
+        evDom.ooDayGrid.appendChild(btn);
+    }
+}
 
 function populateOOModal() {
     const now = new Date();
-    const curYear = now.getFullYear();
-
-    // Years: current and next
-    evDom.ooYear.innerHTML = '';
-    for (let y = curYear; y <= curYear + 1; y++) {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y;
-        evDom.ooYear.appendChild(opt);
-    }
-
-    // Months
-    evDom.ooMonth.innerHTML = '';
-    for (let m = 1; m <= 12; m++) {
-        const opt = document.createElement('option');
-        opt.value = m;
-        opt.textContent = MONTHS_SHORT[m - 1];
-        evDom.ooMonth.appendChild(opt);
-    }
-
-    // Set defaults to today
-    evDom.ooYear.value = curYear;
-    evDom.ooMonth.value = now.getMonth() + 1;
-    updateOODays();
-    evDom.ooDay.value = now.getDate();
+    ooPick.year = now.getFullYear();
+    ooPick.month = now.getMonth() + 1;
+    ooPick.day = now.getDate();
+    evDom.ooYearLabel.textContent = ooPick.year;
+    renderOOMonthGrid();
+    renderOODayGrid();
     evDom.ooText.value = '';
-}
-
-function updateOODays() {
-    const y = parseInt(evDom.ooYear.value);
-    const m = parseInt(evDom.ooMonth.value);
-    const max = daysInMonthNum(y, m);
-    const prev = parseInt(evDom.ooDay.value) || 1;
-
-    evDom.ooDay.innerHTML = '';
-    for (let d = 1; d <= max; d++) {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        evDom.ooDay.appendChild(opt);
-    }
-    evDom.ooDay.value = Math.min(prev, max);
 }
 
 function openOOModal() {
@@ -1425,10 +1428,7 @@ function closeOOModal() {
 }
 
 function saveOO() {
-    const y = evDom.ooYear.value;
-    const m = String(evDom.ooMonth.value).padStart(2, '0');
-    const d = String(evDom.ooDay.value).padStart(2, '0');
-    const date = `${y}-${m}-${d}`;
+    const date = `${ooPick.year}-${String(ooPick.month).padStart(2, '0')}-${String(ooPick.day).padStart(2, '0')}`;
     const text = evDom.ooText.value.trim();
 
     if (editingEvent && editingEvent.type === 'oo') {
@@ -1453,17 +1453,27 @@ function saveOO() {
     if (isDesktop()) renderDesktopView();
 }
 
-// ---- REC Modal ----
+// ---- REC Modal (grid-based picker) ----
+
+const recPick = { day: 1 };
+
+function renderRECDayGrid() {
+    evDom.recDayGrid.innerHTML = '';
+    for (let d = 1; d <= 31; d++) {
+        const btn = document.createElement('button');
+        btn.className = 'picker-day-btn' + (d === recPick.day ? ' selected' : '');
+        btn.textContent = d;
+        btn.addEventListener('click', () => {
+            recPick.day = d;
+            renderRECDayGrid();
+        });
+        evDom.recDayGrid.appendChild(btn);
+    }
+}
 
 function populateRECModal() {
-    evDom.recDay.innerHTML = '';
-    for (let d = 1; d <= 31; d++) {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        evDom.recDay.appendChild(opt);
-    }
-    evDom.recDay.value = 1;
+    recPick.day = 1;
+    renderRECDayGrid();
     evDom.recText.value = '';
 }
 
@@ -1481,7 +1491,7 @@ function closeRECModal() {
 }
 
 function saveREC() {
-    const day = parseInt(evDom.recDay.value);
+    const day = recPick.day;
     const text = evDom.recText.value.trim();
 
     if (editingEvent && editingEvent.type === 'rec') {
@@ -1531,8 +1541,16 @@ function initEventsListeners() {
     });
 
     // OO modal
-    evDom.ooYear.addEventListener('change', updateOODays);
-    evDom.ooMonth.addEventListener('change', updateOODays);
+    evDom.ooYearPrev.addEventListener('click', () => {
+        ooPick.year--;
+        evDom.ooYearLabel.textContent = ooPick.year;
+        renderOODayGrid();
+    });
+    evDom.ooYearNext.addEventListener('click', () => {
+        ooPick.year++;
+        evDom.ooYearLabel.textContent = ooPick.year;
+        renderOODayGrid();
+    });
     evDom.ooSave.addEventListener('click', saveOO);
     evDom.ooCancel.addEventListener('click', closeOOModal);
     evDom.ooOverlay.addEventListener('click', (e) => { if (e.target === evDom.ooOverlay) closeOOModal(); });

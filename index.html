@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=25">
+    <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
     <div id="app">
@@ -115,12 +115,21 @@
 
             <!-- One-off event modal -->
             <div id="modal-oo-overlay" class="modal-overlay hidden">
-                <div class="modal-picker modal-event">
+                <div class="modal-picker modal-event modal-event-grid">
                     <h3 class="modal-event-title">1 Off event</h3>
-                    <div class="modal-event-date">
-                        <select id="oo-year" class="event-select"></select>
-                        <select id="oo-month" class="event-select"></select>
-                        <select id="oo-day" class="event-select"></select>
+                    <!-- Year nav -->
+                    <div id="oo-year-nav" class="picker-year-nav">
+                        <button id="oo-year-prev" class="picker-nav-btn">&#8249;</button>
+                        <span id="oo-year-label" class="picker-year-label">2026</span>
+                        <button id="oo-year-next" class="picker-nav-btn">&#8250;</button>
+                    </div>
+                    <!-- Month grid 3×4 -->
+                    <div id="oo-month-grid" class="picker-month-grid">
+                        <!-- 12 month buttons rendered by JS -->
+                    </div>
+                    <!-- Day grid 7 cols -->
+                    <div id="oo-day-grid" class="picker-day-grid">
+                        <!-- 31 day buttons rendered by JS -->
                     </div>
                     <input id="oo-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
                     <div class="modal-event-actions">
@@ -132,12 +141,13 @@
 
             <!-- Recurring event modal -->
             <div id="modal-rec-overlay" class="modal-overlay hidden">
-                <div class="modal-picker modal-event">
+                <div class="modal-picker modal-event modal-event-grid">
                     <h3 class="modal-event-title">Recurring event</h3>
-                    <div class="modal-event-date modal-event-date-rec">
-                        <select id="rec-day" class="event-select event-select-rec"></select>
-                        <span class="modal-event-freq">of every month</span>
+                    <!-- Day grid 7 cols -->
+                    <div id="rec-day-grid" class="picker-day-grid">
+                        <!-- 31 day buttons rendered by JS -->
                     </div>
+                    <span class="modal-event-freq">of every month</span>
                     <input id="rec-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
                     <div class="modal-event-actions">
                         <button id="rec-cancel" class="event-btn event-btn-cancel">Cancel</button>
@@ -176,6 +186,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=16"></script>
+    <script src="app.js?v=17"></script>
 </body>
 </html>
