@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=27">
+    <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
     <div id="app">
@@ -60,7 +60,9 @@
         <!-- Desktop year view (4×3 grid of months) -->
         <div id="desktop-year-view">
             <div id="desktop-year-header">
+                <button id="desktop-year-prev" class="desktop-year-nav-btn" aria-label="Previous year">&#8249;</button>
                 <h1 id="desktop-year-label">2026</h1>
+                <button id="desktop-year-next" class="desktop-year-nav-btn" aria-label="Next year">&#8250;</button>
             </div>
             <div id="desktop-months-grid">
                 <!-- 12 mini-months rendered by JS -->
@@ -89,11 +91,6 @@
             </button>
             <div id="fab-panel" class="hidden">
                 <button id="fab-mode" class="fab-mode-btn">ELLA</button>
-                <div id="fab-year-nav">
-                    <button id="fab-year-prev" class="fab-nav-btn">‹</button>
-                    <span id="fab-year-label">2026</span>
-                    <button id="fab-year-next" class="fab-nav-btn">›</button>
-                </div>
             </div>
         </div>
 
@@ -186,6 +183,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=19"></script>
+    <script src="app.js?v=20"></script>
 </body>
 </html>

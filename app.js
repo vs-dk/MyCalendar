@@ -601,15 +601,14 @@ const isDesktop = () => window.innerWidth >= 768;
 const desktopDom = {
     yearView: document.getElementById('desktop-year-view'),
     yearLabel: document.getElementById('desktop-year-label'),
+    yearPrev: document.getElementById('desktop-year-prev'),
+    yearNext: document.getElementById('desktop-year-next'),
     monthsGrid: document.getElementById('desktop-months-grid'),
     fab: document.getElementById('desktop-fab'),
     fabLock: document.getElementById('fab-lock'),
     fabLockIcon: document.getElementById('fab-lock-icon'),
     fabPanel: document.getElementById('fab-panel'),
     fabMode: document.getElementById('fab-mode'),
-    fabYearLabel: document.getElementById('fab-year-label'),
-    fabYearPrev: document.getElementById('fab-year-prev'),
-    fabYearNext: document.getElementById('fab-year-next'),
 };
 
 const desktopState = {
@@ -621,7 +620,6 @@ function renderDesktopView() {
 
     const year = desktopState.year;
     desktopDom.yearLabel.textContent = year;
-    desktopDom.fabYearLabel.textContent = year;
     desktopDom.monthsGrid.innerHTML = '';
 
     for (let month = 0; month < 12; month++) {
@@ -775,12 +773,12 @@ function initDesktopEvents() {
         renderDesktopModeButton();
     });
 
-    desktopDom.fabYearPrev.addEventListener('click', () => {
+    desktopDom.yearPrev.addEventListener('click', () => {
         desktopState.year--;
         renderDesktopView();
     });
 
-    desktopDom.fabYearNext.addEventListener('click', () => {
+    desktopDom.yearNext.addEventListener('click', () => {
         desktopState.year++;
         renderDesktopView();
     });

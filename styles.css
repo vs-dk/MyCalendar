@@ -1100,7 +1100,10 @@ html, body {
     }
 
     #desktop-year-header {
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
         padding: 0 0 20px;
     }
 
@@ -1109,6 +1112,25 @@ html, body {
         font-weight: 500;
         color: var(--text-header);
         letter-spacing: -0.02em;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .desktop-year-nav-btn {
+        background: none;
+        border: none;
+        color: var(--text-header);
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 4px 12px;
+        border-radius: 6px;
+        transition: background var(--transition-fast), color var(--transition-fast);
+        line-height: 1;
+    }
+
+    .desktop-year-nav-btn:hover {
+        background: var(--bg-cell);
+        color: #b0b0b0;
     }
 
     /* 3 columns × 4 rows */
@@ -1321,35 +1343,6 @@ html, body {
     .fab-mode-btn.mode-custody { color: var(--color-custody); border-color: var(--color-custody); }
     .fab-mode-btn.mode-school { color: var(--color-school); border-color: var(--color-school); }
     .fab-mode-btn.mode-work { color: var(--color-work); border-color: var(--color-work); }
-
-    #fab-year-nav {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    #fab-year-label {
-        font-size: 0.75rem;
-        color: var(--text-header);
-        font-weight: 500;
-        min-width: 36px;
-        text-align: center;
-    }
-
-    .fab-nav-btn {
-        background: none;
-        border: none;
-        color: var(--text-header);
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 2px 6px;
-        border-radius: 4px;
-        transition: background var(--transition-fast);
-    }
-
-    .fab-nav-btn:hover {
-        background: #333;
-    }
 
     /* --- Desktop Events Panel (slide-in from left) --- */
     #events-section {
