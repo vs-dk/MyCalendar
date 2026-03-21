@@ -244,7 +244,7 @@ html, body {
 /* Holiday dots — small dot below the number */
 .day-cell .marker-dot {
     position: absolute;
-    bottom: 10px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
     width: 5px;
@@ -282,7 +282,20 @@ html, body {
     color: var(--color-custody);
 }
 
-/* --- Event indicator circle --- */
+/* --- Event indicator dot (above day number) --- */
+.event-dot {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #5a5a5a;
+    pointer-events: none;
+}
+
+/* --- Event indicator circle (disabled, kept for reference) ---
 .day-cell.has-events .day-number::after {
     content: '';
     position: absolute;
@@ -295,6 +308,7 @@ html, body {
     border-radius: 50%;
     pointer-events: none;
 }
+--- */
 
 .day-cell.has-events {
     cursor: pointer;

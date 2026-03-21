@@ -312,10 +312,13 @@ function renderCalendar(direction = null) {
                 cell.classList.add('today');
             }
 
-            // Event indicator (circle around day number)
+            // Event indicator (dot above day number)
             const dayEvents = getEventsForDate(key);
             if (dayEvents.length > 0) {
                 cell.classList.add('has-events');
+                const eventDot = document.createElement('div');
+                eventDot.className = 'event-dot';
+                cell.appendChild(eventDot);
             }
 
             // Editable state
