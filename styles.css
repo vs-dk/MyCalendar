@@ -922,6 +922,19 @@ html, body {
     pointer-events: none;
 }
 
+.picker-day-label {
+    font-size: 0.6rem;
+    color: var(--text-weekday);
+    text-align: center;
+    padding: 4px 0 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.picker-day-empty {
+    pointer-events: none;
+}
+
 .modal-event-title {
     font-size: 0.9rem;
     font-weight: 500;

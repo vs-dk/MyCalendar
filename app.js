@@ -1388,14 +1388,27 @@ function renderOODayGrid() {
     evDom.ooDayGrid.innerHTML = '';
     const max = daysInMonthNum(ooPick.year, ooPick.month);
     if (ooPick.day > max) ooPick.day = max;
-    for (let d = 1; d <= 31; d++) {
+    // Weekday headers
+    for (const l of ['M', 'T', 'W', 'T', 'F', 'S', 'S']) {
+        const lbl = document.createElement('span');
+        lbl.className = 'picker-day-label';
+        lbl.textContent = l;
+        evDom.ooDayGrid.appendChild(lbl);
+    }
+    // Empty cells before day 1 (firstDayOfMonth uses 0-indexed month)
+    const startDay = firstDayOfMonth(ooPick.year, ooPick.month - 1);
+    for (let i = 0; i < startDay; i++) {
+        const empty = document.createElement('span');
+        empty.className = 'picker-day-empty';
+        evDom.ooDayGrid.appendChild(empty);
+    }
+    // Day buttons
+    for (let d = 1; d <= max; d++) {
         const btn = document.createElement('button');
         btn.className = 'picker-day-btn';
         btn.textContent = d;
         if (d === ooPick.day) btn.classList.add('selected');
-        if (d > max) btn.classList.add('invalid');
         btn.addEventListener('click', () => {
-            if (d > max) return;
             ooPick.day = d;
             renderOODayGrid();
         });
