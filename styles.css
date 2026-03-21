@@ -215,9 +215,11 @@ html, body {
     transition: color var(--transition-fast);
 }
 
-/* Other month days */
-.day-cell.other-month .day-number {
-    color: var(--text-secondary);
+/* Other month days — hidden but cell takes space */
+.day-cell.other-month .day-number,
+.day-cell.other-month .marker-dot,
+.day-cell.other-month .event-dot {
+    visibility: hidden;
 }
 
 /* Editable state */
@@ -295,20 +297,6 @@ html, body {
     pointer-events: none;
 }
 
-/* --- Event indicator circle (disabled, kept for reference) ---
-.day-cell.has-events .day-number::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 36px;
-    height: 36px;
-    border: 1.5px solid #4a4a4a;
-    border-radius: 50%;
-    pointer-events: none;
-}
---- */
 
 .day-cell.has-events {
     cursor: pointer;
