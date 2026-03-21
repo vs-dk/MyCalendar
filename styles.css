@@ -1009,6 +1009,7 @@ html, body {
         background: var(--bg-cell);
         border-radius: var(--border-radius);
         padding: 10px;
+        position: relative;
     }
 
     .mini-month-header {
@@ -1047,6 +1048,19 @@ html, body {
         display: grid;
         grid-template-columns: repeat(5, 1fr) 8px repeat(2, 1fr);
         gap: 0;
+        position: relative;
+    }
+
+    /* Weekend separator line — full height of mini-month */
+    .mini-month::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        bottom: 10px;
+        left: calc(10px + (5 / 7) * (100% - 20px - 8px) + 4px);
+        width: 1px;
+        background: #333;
+        pointer-events: none;
     }
 
     .mini-day {
@@ -1066,7 +1080,7 @@ html, body {
     }
 
     .mini-day.weekend-gap {
-        background: var(--bg-app);
+        background: transparent;
         pointer-events: none;
     }
 
