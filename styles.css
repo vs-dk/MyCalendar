@@ -1282,8 +1282,8 @@ html, body {
 
     #fab-panel {
         position: absolute;
-        bottom: 56px;
-        right: 0;
+        bottom: 0;
+        right: 56px;
         display: flex;
         flex-direction: column;
         align-items: center;
