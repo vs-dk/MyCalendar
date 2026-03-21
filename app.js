@@ -153,6 +153,7 @@ async function loadFromGitHub() {
 
         // Re-render with fresh data
         renderCalendar();
+        if (isDesktop()) renderDesktopView();
     } catch (e) {
         console.warn('GitHub load failed, using local data:', e);
     }
@@ -593,6 +594,217 @@ function initEvents() {
     });
 }
 
+// ---- Desktop Year View ----
+
+const isDesktop = () => window.innerWidth >= 768;
+
+const desktopDom = {
+    yearView: document.getElementById('desktop-year-view'),
+    yearLabel: document.getElementById('desktop-year-label'),
+    monthsGrid: document.getElementById('desktop-months-grid'),
+    fab: document.getElementById('desktop-fab'),
+    fabLock: document.getElementById('fab-lock'),
+    fabLockIcon: document.getElementById('fab-lock-icon'),
+    fabPanel: document.getElementById('fab-panel'),
+    fabMode: document.getElementById('fab-mode'),
+    fabYearLabel: document.getElementById('fab-year-label'),
+    fabYearPrev: document.getElementById('fab-year-prev'),
+    fabYearNext: document.getElementById('fab-year-next'),
+};
+
+const desktopState = {
+    year: new Date().getFullYear(),
+};
+
+function renderDesktopView() {
+    if (!isDesktop()) return;
+
+    const year = desktopState.year;
+    desktopDom.yearLabel.textContent = year;
+    desktopDom.fabYearLabel.textContent = year;
+    desktopDom.monthsGrid.innerHTML = '';
+
+    for (let month = 0; month < 12; month++) {
+        const miniMonth = document.createElement('div');
+        miniMonth.className = 'mini-month';
+
+        // Month header
+        const header = document.createElement('div');
+        header.className = 'mini-month-header';
+        header.textContent = MONTHS_SHORT[month];
+
+        // Highlight current month
+        const now = new Date();
+        if (year === now.getFullYear() && month === now.getMonth()) {
+            header.classList.add('current-month');
+        }
+
+        miniMonth.appendChild(header);
+
+        // Weekday labels
+        const weekdays = document.createElement('div');
+        weekdays.className = 'mini-weekdays';
+        for (const d of ['M', 'T', 'W', 'T', 'F', 'S', 'S']) {
+            const s = document.createElement('span');
+            s.textContent = d;
+            if (d === 'S') s.classList.add('mini-weekend');
+            weekdays.appendChild(s);
+        }
+        miniMonth.appendChild(weekdays);
+
+        // Days grid
+        const grid = document.createElement('div');
+        grid.className = 'mini-days-grid';
+
+        const totalDays = daysInMonth(year, month);
+        const startDay = firstDayOfMonth(year, month);
+
+        // Empty cells for days before the 1st
+        for (let i = 0; i < startDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'mini-day empty';
+            grid.appendChild(empty);
+        }
+
+        // Day cells
+        for (let day = 1; day <= totalDays; day++) {
+            const cell = document.createElement('div');
+            cell.className = 'mini-day';
+
+            const key = dateKey(year, month, day);
+            const markers = getMarkers(key);
+
+            if (markers.has('custody')) cell.classList.add('custody');
+            if (markers.has('school')) cell.classList.add('school-holiday');
+            if (markers.has('work')) cell.classList.add('work-holiday');
+
+            if (isToday(year, month, day)) cell.classList.add('today');
+
+            // Day of week (0=Mon, 5=Sat, 6=Sun)
+            const dow = (startDay + day - 1) % 7;
+            if (dow >= 5) cell.classList.add('weekend');
+
+            const daySpan = document.createElement('span');
+            daySpan.className = 'mini-day-number';
+            daySpan.textContent = day;
+            cell.appendChild(daySpan);
+
+            // Marker dots container
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'mini-dots';
+
+            if (markers.has('school') || markers.has('work')) {
+                const dot = document.createElement('div');
+                dot.className = 'mini-marker-dot';
+                if (markers.has('school') && markers.has('work')) {
+                    dot.style.background = 'var(--color-both-holidays)';
+                } else if (markers.has('school')) {
+                    dot.style.background = 'var(--color-school)';
+                } else {
+                    dot.style.background = 'var(--color-work)';
+                }
+                dotsContainer.appendChild(dot);
+            }
+
+            const dayEvents = getEventsForDate(key);
+            if (dayEvents.length > 0) {
+                const dot = document.createElement('div');
+                dot.className = 'mini-event-dot';
+                dotsContainer.appendChild(dot);
+            }
+
+            cell.appendChild(dotsContainer);
+
+            // Click handler
+            if (!state.isLocked) {
+                cell.classList.add('editable');
+                cell.addEventListener('click', () => {
+                    toggleMarker(key, currentMode());
+                    renderDesktopView();
+                });
+            } else if (dayEvents.length > 0) {
+                cell.classList.add('has-events');
+                cell.addEventListener('click', () => showEventTooltip(cell, dayEvents, dow));
+            }
+
+            grid.appendChild(cell);
+        }
+
+        miniMonth.appendChild(grid);
+        desktopDom.monthsGrid.appendChild(miniMonth);
+    }
+}
+
+function renderDesktopFab() {
+    if (!isDesktop()) return;
+
+    const svg = desktopDom.fabLockIcon;
+    if (state.isLocked) {
+        desktopDom.fabLock.classList.remove('unlocked');
+        desktopDom.fabPanel.classList.add('hidden');
+        svg.innerHTML = `
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        `;
+    } else {
+        desktopDom.fabLock.classList.add('unlocked');
+        desktopDom.fabPanel.classList.remove('hidden');
+        svg.innerHTML = `
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+        `;
+    }
+}
+
+function renderDesktopModeButton() {
+    if (!isDesktop()) return;
+    const mode = currentMode();
+    desktopDom.fabMode.textContent = MODE_LABELS[mode];
+    desktopDom.fabMode.classList.remove(...Object.values(MODE_CLASSES));
+    desktopDom.fabMode.classList.add(MODE_CLASSES[mode]);
+}
+
+function initDesktopEvents() {
+    desktopDom.fabLock.addEventListener('click', () => {
+        state.isLocked = !state.isLocked;
+        if (!state.isLocked) {
+            state.currentModeIndex = 0;
+            renderDesktopModeButton();
+        }
+        renderDesktopFab();
+        renderDesktopView();
+    });
+
+    desktopDom.fabMode.addEventListener('click', () => {
+        state.currentModeIndex = (state.currentModeIndex + 1) % MODES.length;
+        renderDesktopModeButton();
+    });
+
+    desktopDom.fabYearPrev.addEventListener('click', () => {
+        desktopState.year--;
+        renderDesktopView();
+    });
+
+    desktopDom.fabYearNext.addEventListener('click', () => {
+        desktopState.year++;
+        renderDesktopView();
+    });
+
+    // Re-render on resize (crossing 768px boundary)
+    let wasDesktop = isDesktop();
+    window.addEventListener('resize', () => {
+        const nowDesktop = isDesktop();
+        if (nowDesktop !== wasDesktop) {
+            wasDesktop = nowDesktop;
+            if (nowDesktop) {
+                renderDesktopView();
+                renderDesktopFab();
+                renderDesktopModeButton();
+            }
+        }
+    });
+}
+
 // ---- Init ----
 
 function init() {
@@ -609,6 +821,12 @@ function init() {
     loadData();
     initEvents();
     renderAll();
+    initDesktopEvents();
+    if (isDesktop()) {
+        renderDesktopView();
+        renderDesktopFab();
+        renderDesktopModeButton();
+    }
 
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {

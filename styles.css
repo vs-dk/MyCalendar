@@ -958,26 +958,262 @@ html, body {
     }
 }
 
-/* --- Desktop adjustments --- */
+/* --- Desktop Year View --- */
+
+#desktop-year-view {
+    display: none;
+}
+
+#desktop-fab {
+    display: none;
+}
+
 @media (min-width: 768px) {
+    /* Hide mobile view */
+    #calendar-header, #weekday-labels, #calendar-grid, #bottom-bar, #events-section {
+        display: none !important;
+    }
+
     #app {
-        padding: 24px 16px;
+        max-width: 100%;
+        padding: 20px 40px;
+        height: auto;
     }
 
-    .day-cell {
-        height: 50px;
+    /* Show desktop view */
+    #desktop-year-view {
+        display: block;
     }
 
-    #month-year-label {
-        font-size: 1.5rem;
+    #desktop-year-header {
+        text-align: center;
+        padding: 0 0 20px;
     }
 
-    .today-btn {
+    #desktop-year-label {
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: var(--text-header);
+        letter-spacing: -0.02em;
+    }
+
+    /* 4 columns × 3 rows */
+    #desktop-months-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    /* Mini month */
+    .mini-month {
+        background: var(--bg-cell);
+        border-radius: var(--border-radius);
+        padding: 10px;
+    }
+
+    .mini-month-header {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-header);
+        padding: 2px 0 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .mini-month-header.current-month {
+        color: var(--color-custody);
+    }
+
+    .mini-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0;
+        padding: 0 0 4px;
+    }
+
+    .mini-weekdays span {
+        text-align: center;
+        font-size: 0.55rem;
+        color: var(--text-weekday);
+        text-transform: uppercase;
+    }
+
+    .mini-weekdays .mini-weekend {
+        color: #3a3a3a;
+    }
+
+    .mini-days-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+    }
+
+    .mini-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 28px;
+        position: relative;
+        cursor: default;
+        border-radius: 3px;
+        transition: background var(--transition-fast);
+    }
+
+    .mini-day.empty {
+        pointer-events: none;
+    }
+
+    .mini-day-number {
+        font-size: 0.7rem;
+        color: var(--text-primary);
+        line-height: 1;
+    }
+
+    .mini-day.weekend .mini-day-number {
+        color: #505050;
+    }
+
+    .mini-day.custody .mini-day-number {
+        color: var(--color-custody);
+        font-weight: 600;
+    }
+
+    .mini-day.today {
+        background: var(--color-today);
+    }
+
+    .mini-day.editable {
+        cursor: pointer;
+    }
+
+    .mini-day.editable:hover {
+        background: #333;
+    }
+
+    .mini-day.has-events {
+        cursor: pointer;
+    }
+
+    /* Mini dots */
+    .mini-dots {
+        display: flex;
+        gap: 2px;
+        position: absolute;
+        bottom: 1px;
+    }
+
+    .mini-marker-dot, .mini-event-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+    }
+
+    .mini-event-dot {
+        background: #5a5a5a;
+    }
+
+    /* FAB */
+    #desktop-fab {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 200;
+        gap: 8px;
+    }
+
+    #fab-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        background: #2a2a2a;
+        border: 1px solid #3a3a3a;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    #fab-panel.hidden {
         display: none;
     }
 
-    #events-section {
-        display: none;
+    .fab-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: none;
+        background: #2a2a2a;
+        color: var(--color-lock-locked);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        transition: background var(--transition-fast);
+    }
+
+    .fab-btn:hover {
+        background: #333;
+    }
+
+    .fab-btn.unlocked {
+        color: var(--color-lock-unlocked);
+    }
+
+    .fab-mode-btn {
+        background: none;
+        border: 1px solid #3a3a3a;
+        color: var(--text-primary);
+        font-family: var(--font-family);
+        font-size: 0.7rem;
+        font-weight: 500;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        letter-spacing: 0.05em;
+        transition: background var(--transition-fast), color var(--transition-fast);
+        min-width: 70px;
+    }
+
+    .fab-mode-btn:hover {
+        background: #333;
+    }
+
+    .fab-mode-btn.mode-custody { color: var(--color-custody); border-color: var(--color-custody); }
+    .fab-mode-btn.mode-school { color: var(--color-school); border-color: var(--color-school); }
+    .fab-mode-btn.mode-work { color: var(--color-work); border-color: var(--color-work); }
+
+    #fab-year-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    #fab-year-label {
+        font-size: 0.75rem;
+        color: var(--text-header);
+        font-weight: 500;
+        min-width: 36px;
+        text-align: center;
+    }
+
+    .fab-nav-btn {
+        background: none;
+        border: none;
+        color: var(--text-header);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 4px;
+        transition: background var(--transition-fast);
+    }
+
+    .fab-nav-btn:hover {
+        background: #333;
     }
 }
 

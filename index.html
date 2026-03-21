@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=16">
+    <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
     <div id="app">
@@ -55,6 +55,34 @@
             <button id="btn-mode" class="mode-btn hidden" aria-label="Toggle mode">
                 ELLA
             </button>
+        </div>
+
+        <!-- Desktop year view (4×3 grid of months) -->
+        <div id="desktop-year-view">
+            <div id="desktop-year-header">
+                <h1 id="desktop-year-label">2026</h1>
+            </div>
+            <div id="desktop-months-grid">
+                <!-- 12 mini-months rendered by JS -->
+            </div>
+        </div>
+
+        <!-- Desktop FAB (floating action button) -->
+        <div id="desktop-fab">
+            <button id="fab-lock" class="fab-btn" aria-label="Toggle lock">
+                <svg id="fab-lock-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </button>
+            <div id="fab-panel" class="hidden">
+                <button id="fab-mode" class="fab-mode-btn">ELLA</button>
+                <div id="fab-year-nav">
+                    <button id="fab-year-prev" class="fab-nav-btn">‹</button>
+                    <span id="fab-year-label">2026</span>
+                    <button id="fab-year-next" class="fab-nav-btn">›</button>
+                </div>
+            </div>
         </div>
 
         <!-- Events section (mobile only) -->
@@ -136,6 +164,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=12"></script>
+    <script src="app.js?v=13"></script>
 </body>
 </html>
