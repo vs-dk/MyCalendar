@@ -330,7 +330,8 @@ function renderCalendar(direction = null) {
                 });
             } else if (dayEvents.length > 0) {
                 // Locked + has events: show tooltip on tap
-                cell.addEventListener('click', () => showEventTooltip(cell, dayEvents));
+                const tooltipCol = col;
+                cell.addEventListener('click', () => showEventTooltip(cell, dayEvents, tooltipCol));
             }
 
             // Store date info on cell
@@ -378,7 +379,7 @@ function renderModeButton() {
 
 let activeTooltip = null;
 
-function showEventTooltip(cell, events) {
+function showEventTooltip(cell, events, col) {
     // Remove existing tooltip
     if (activeTooltip) {
         activeTooltip.remove();
@@ -387,6 +388,18 @@ function showEventTooltip(cell, events) {
 
     const tooltip = document.createElement('div');
     tooltip.className = 'event-tooltip';
+
+    // Align tooltip based on column position
+    if (col <= 1) {
+        // Monday/Tuesday: align left
+        tooltip.style.left = '0';
+        tooltip.style.transform = 'none';
+    } else if (col >= 6) {
+        // Saturday/Sunday: align right
+        tooltip.style.left = 'auto';
+        tooltip.style.right = '0';
+        tooltip.style.transform = 'none';
+    }
 
     for (const ev of events) {
         const line = document.createElement('div');
