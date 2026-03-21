@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=22">
+    <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
     <div id="app">
@@ -112,51 +112,51 @@
             <div id="events-list">
                 <!-- Event rows rendered by JS -->
             </div>
-        </div>
 
-        <!-- One-off event modal -->
-        <div id="modal-oo-overlay" class="modal-overlay hidden">
-            <div class="modal-picker modal-event">
-                <h3 class="modal-event-title">1 Off event</h3>
-                <div class="modal-event-date">
-                    <select id="oo-year" class="event-select"></select>
-                    <select id="oo-month" class="event-select"></select>
-                    <select id="oo-day" class="event-select"></select>
-                </div>
-                <input id="oo-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
-                <div class="modal-event-actions">
-                    <button id="oo-cancel" class="event-btn event-btn-cancel">Cancel</button>
-                    <button id="oo-save" class="event-btn event-btn-save">Save</button>
+            <!-- One-off event modal -->
+            <div id="modal-oo-overlay" class="modal-overlay hidden">
+                <div class="modal-picker modal-event">
+                    <h3 class="modal-event-title">1 Off event</h3>
+                    <div class="modal-event-date">
+                        <select id="oo-year" class="event-select"></select>
+                        <select id="oo-month" class="event-select"></select>
+                        <select id="oo-day" class="event-select"></select>
+                    </div>
+                    <input id="oo-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
+                    <div class="modal-event-actions">
+                        <button id="oo-cancel" class="event-btn event-btn-cancel">Cancel</button>
+                        <button id="oo-save" class="event-btn event-btn-save">Save</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Recurring event modal -->
-        <div id="modal-rec-overlay" class="modal-overlay hidden">
-            <div class="modal-picker modal-event">
-                <h3 class="modal-event-title">Recurring event</h3>
-                <div class="modal-event-date modal-event-date-rec">
-                    <select id="rec-day" class="event-select event-select-rec"></select>
-                    <span class="modal-event-freq">of every month</span>
-                </div>
-                <input id="rec-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
-                <div class="modal-event-actions">
-                    <button id="rec-cancel" class="event-btn event-btn-cancel">Cancel</button>
-                    <button id="rec-save" class="event-btn event-btn-save">Save</button>
+            <!-- Recurring event modal -->
+            <div id="modal-rec-overlay" class="modal-overlay hidden">
+                <div class="modal-picker modal-event">
+                    <h3 class="modal-event-title">Recurring event</h3>
+                    <div class="modal-event-date modal-event-date-rec">
+                        <select id="rec-day" class="event-select event-select-rec"></select>
+                        <span class="modal-event-freq">of every month</span>
+                    </div>
+                    <input id="rec-text" type="text" class="event-input" placeholder="Description (optional)" maxlength="30">
+                    <div class="modal-event-actions">
+                        <button id="rec-cancel" class="event-btn event-btn-cancel">Cancel</button>
+                        <button id="rec-save" class="event-btn event-btn-save">Save</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Event detail modal (view/edit) -->
-        <div id="modal-event-detail-overlay" class="modal-overlay hidden">
-            <div class="modal-picker modal-event">
-                <h3 id="detail-title" class="modal-event-title"></h3>
-                <p id="detail-date" class="modal-event-detail-date"></p>
-                <p id="detail-text" class="modal-event-detail-text"></p>
-                <div class="modal-event-actions">
-                    <button id="detail-delete" class="event-btn event-btn-delete">Delete</button>
-                    <button id="detail-done" class="event-btn event-btn-done">Done</button>
-                    <button id="detail-close" class="event-btn event-btn-cancel">Close</button>
+            <!-- Event detail modal (view/edit) -->
+            <div id="modal-event-detail-overlay" class="modal-overlay hidden">
+                <div class="modal-picker modal-event">
+                    <h3 id="detail-title" class="modal-event-title"></h3>
+                    <p id="detail-date" class="modal-event-detail-date"></p>
+                    <p id="detail-text" class="modal-event-detail-text"></p>
+                    <div class="modal-event-actions">
+                        <button id="detail-delete" class="event-btn event-btn-delete">Delete</button>
+                        <button id="detail-done" class="event-btn event-btn-done">Done</button>
+                        <button id="detail-close" class="event-btn event-btn-cancel">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -176,6 +176,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=14"></script>
+    <script src="app.js?v=15"></script>
 </body>
 </html>

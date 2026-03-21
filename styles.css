@@ -975,6 +975,11 @@ html, body {
     /* Show desktop view */
     #desktop-year-view {
         display: block;
+        transition: margin-left var(--transition-medium);
+    }
+
+    #app.events-panel-open #desktop-year-view {
+        margin-left: 340px;
     }
 
     #desktop-year-header {
@@ -1264,6 +1269,24 @@ html, body {
 
     #events-toolbar {
         display: flex !important;
+        flex-wrap: wrap;
+    }
+
+    .event-add-btn {
+        font-size: 0.65rem;
+        padding: 6px 10px;
+    }
+
+    .event-filter-btn {
+        font-size: 0.65rem;
+        padding: 6px 0;
+        width: 70px;
+    }
+
+    .event-expand-btn {
+        font-size: 0.65rem;
+        padding: 6px 0;
+        width: 70px;
     }
 
     #events-list {
@@ -1280,7 +1303,30 @@ html, body {
     }
 
     .event-row-text {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+    }
+
+    .event-row-date {
+        font-size: 0.7rem;
+        min-width: 44px;
+    }
+
+    /* Event modals inside panel — no full-screen backdrop */
+    #events-section .modal-overlay {
+        position: absolute;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 10;
+    }
+
+    #events-section .modal-event {
+        width: 260px;
+    }
+
+    #events-section .event-select {
+        font-size: 0.8rem;
+        padding: 8px 6px;
     }
 
     /* Events FAB (left side) */

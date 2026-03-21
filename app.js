@@ -789,7 +789,9 @@ function initDesktopEvents() {
     const fabEvents = document.getElementById('fab-events');
     fabEvents.addEventListener('click', () => {
         const section = document.getElementById('events-section');
+        const app = document.getElementById('app');
         const open = section.classList.toggle('panel-open');
+        app.classList.toggle('events-panel-open', open);
         fabEvents.classList.toggle('panel-active', open);
     });
 
