@@ -47,6 +47,12 @@
       "date": "2026-04-08",
       "text": "Checkin AMS",
       "completed": false
+    },
+    {
+      "id": "mn0dn5pwcc6y",
+      "date": "2026-05-24",
+      "text": "Perplexity free, do card info",
+      "completed": false
     }
   ],
   "recurring": [
