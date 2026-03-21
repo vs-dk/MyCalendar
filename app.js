@@ -1491,7 +1491,7 @@ function initEventsListeners() {
     evDom.btnAddOO.addEventListener('click', openOOModal);
     evDom.btnAddRec.addEventListener('click', openRECModal);
 
-    // Expand/collapse calendar
+    // Expand/collapse calendar (mobile) or year view (desktop)
     const btnExpandEvents = document.getElementById('btn-expand-events');
     btnExpandEvents.addEventListener('click', () => {
         const app = document.getElementById('app');

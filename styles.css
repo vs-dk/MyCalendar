@@ -958,7 +958,7 @@ html, body {
 
 @media (min-width: 768px) {
     /* Hide mobile view */
-    #calendar-header, #weekday-labels, #calendar-grid, #bottom-bar, #events-section {
+    #calendar-header, #weekday-labels, #calendar-grid, #bottom-bar {
         display: none !important;
     }
 
@@ -1223,6 +1223,53 @@ html, body {
 
     .fab-nav-btn:hover {
         background: #333;
+    }
+
+    /* --- Desktop Events Section --- */
+    #events-section {
+        display: flex !important;
+        flex-direction: column;
+        margin-top: 0;
+        padding: 20px 24px 40px;
+        border-top: 2px solid #555;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        flex: none;
+        overflow: visible;
+        min-height: auto;
+    }
+
+    #events-title-row {
+        display: flex !important;
+    }
+
+    #events-toolbar {
+        display: flex !important;
+    }
+
+    #events-list {
+        display: block !important;
+        overflow: visible;
+        max-height: none;
+    }
+
+    .event-row {
+        padding: 10px 14px;
+    }
+
+    .event-row-text {
+        font-size: 0.9rem;
+    }
+
+    /* Desktop calendar collapsed — hide year view */
+    #app.calendar-collapsed #desktop-year-view {
+        display: none;
+    }
+
+    #app.calendar-collapsed #events-section {
+        margin-top: 0;
+        border-top: none;
     }
 }
 
