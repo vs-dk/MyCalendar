@@ -647,11 +647,9 @@ function renderDesktopView() {
 
         const totalDays = daysInMonth(year, month);
         const startDay = firstDayOfMonth(year, month);
-        const totalRows = Math.ceil((startDay + totalDays) / 7);
-
         let dayCounter = 1;
 
-        for (let row = 0; row < totalRows; row++) {
+        for (let row = 0; row < 6; row++) {
             for (let col = 0; col < 8; col++) {
                 // Column 5 is the weekend gap
                 if (col === 5) {
