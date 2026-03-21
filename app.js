@@ -1032,7 +1032,7 @@ async function syncEventsToGitHub(data) {
 
 function getEventsList() {
     const today = todayStr();
-    const maxDate = eventsState.expanded ? addMonths(today, 12) : addMonths(today, 1);
+    const maxDate = eventsState.expanded ? addMonths(today, 24) : addMonths(today, 1);
     // For completed view: show last 3 months
     const minCompleted = addMonths(today, -3);
 
@@ -1062,9 +1062,9 @@ function getEventsList() {
             const start = filter === 'completed'
                 ? new Date(minCompleted.substring(0, 7) + '-01')
                 : new Date(startDate);
-            // For completed: scan up to 12 months ahead to catch future instances marked done
+            // For completed: scan up to 24 months ahead to catch future instances marked done
             const endDate = filter === 'completed'
-                ? new Date(addMonths(today, 12))
+                ? new Date(addMonths(today, 24))
                 : new Date(maxDate);
 
             // Generate one instance per month
