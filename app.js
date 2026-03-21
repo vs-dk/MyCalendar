@@ -2,6 +2,14 @@
    MY CALENDAR — Application Logic
    ============================================ */
 
+// ---- UTF-8 safe base64 ----
+function utf8ToBase64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+}
+function base64ToUtf8(b64) {
+    return decodeURIComponent(escape(atob(b64)));
+}
+
 // ---- Constants ----
 const MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -132,7 +140,7 @@ async function loadFromGitHub() {
         if (!res.ok) return;
 
         const data = await res.json();
-        const parsed = JSON.parse(atob(data.content));
+        const parsed = JSON.parse(base64ToUtf8(data.content));
 
         // Replace local data with GitHub data (GitHub is source of truth)
         state.markers = {};
@@ -181,7 +189,7 @@ async function syncToGitHub(data) {
         // Write file
         const body = {
             message: 'sync markers',
-            content: btoa(JSON.stringify(data, null, 2)),
+            content: utf8ToBase64(JSON.stringify(data, null, 2)),
         };
         if (sha) body.sha = sha;
 
@@ -744,7 +752,7 @@ async function loadEventsFromGitHub() {
         if (!res.ok) return;
 
         const data = await res.json();
-        const parsed = JSON.parse(atob(data.content));
+        const parsed = JSON.parse(base64ToUtf8(data.content));
 
         eventsState.oneoff = parsed.oneoff || [];
         eventsState.recurring = parsed.recurring || [];
@@ -772,7 +780,7 @@ async function syncEventsToGitHub(data) {
 
         const body = {
             message: 'sync events',
-            content: btoa(JSON.stringify(data, null, 2)),
+            content: utf8ToBase64(JSON.stringify(data, null, 2)),
         };
         if (sha) body.sha = sha;
 
