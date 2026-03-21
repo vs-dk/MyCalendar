@@ -956,6 +956,10 @@ html, body {
     display: none;
 }
 
+.fab-events-btn {
+    display: none;
+}
+
 @media (min-width: 768px) {
     /* Hide mobile view */
     #calendar-header, #weekday-labels, #calendar-grid, #bottom-bar {
@@ -985,10 +989,10 @@ html, body {
         letter-spacing: -0.02em;
     }
 
-    /* 4 columns × 3 rows */
+    /* 3 columns × 4 rows */
     #desktop-months-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 10px;
     }
 
@@ -1225,43 +1229,37 @@ html, body {
         background: #333;
     }
 
-    /* --- Desktop Events Section --- */
+    /* --- Desktop Events Panel (slide-in from left) --- */
     #events-section {
         display: flex !important;
         flex-direction: column;
-        margin-top: 0;
-        padding: 20px 0 40px;
-        border-top: none;
-        max-width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 340px;
+        height: 100vh;
+        background: var(--bg-app);
+        border-right: 1px solid #2a2a2a;
+        z-index: 150;
+        padding: 20px 16px;
+        margin: 0;
+        transform: translateX(-100%);
+        transition: transform var(--transition-medium);
+        overflow: hidden;
         flex: none;
-        overflow: visible;
-        min-height: auto;
-        position: relative;
     }
 
-    /* Full-width separator line */
-    #events-section::before {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 1px;
-        background: #333;
-        margin-bottom: 20px;
-    }
-
-    #events-title-row,
-    #events-toolbar,
-    #events-list {
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-        width: 100%;
-        padding-left: 24px;
-        padding-right: 24px;
+    #events-section.panel-open {
+        transform: translateX(0);
     }
 
     #events-title-row {
         display: flex !important;
+    }
+
+    /* Hide expand button on desktop */
+    .event-collapse-btn {
+        display: none !important;
     }
 
     #events-toolbar {
@@ -1270,26 +1268,48 @@ html, body {
 
     #events-list {
         display: block !important;
-        overflow: visible;
-        max-height: none;
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0;
+        scrollbar-width: thin;
+        scrollbar-color: #333 transparent;
     }
 
     .event-row {
-        padding: 10px 14px;
+        padding: 8px 10px;
     }
 
     .event-row-text {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
-    /* Desktop calendar collapsed — hide year view */
-    #app.calendar-collapsed #desktop-year-view {
-        display: none;
+    /* Events FAB (left side) */
+    .fab-events-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 24px;
+        left: 24px;
+        z-index: 200;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: none;
+        background: #2a2a2a;
+        color: #909090;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        transition: background var(--transition-fast), color var(--transition-fast);
     }
 
-    #app.calendar-collapsed #events-section {
-        margin-top: 0;
-        border-top: none;
+    .fab-events-btn:hover {
+        background: #333;
+        color: #b0b0b0;
+    }
+
+    .fab-events-btn.panel-active {
+        color: #4a7ea8;
     }
 }
 
