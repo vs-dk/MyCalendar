@@ -785,14 +785,20 @@ function initDesktopEvents() {
         renderDesktopView();
     });
 
-    // Events panel toggle (left FAB)
+    // Events panel toggle (left FAB) — persist state
     const fabEvents = document.getElementById('fab-events');
+    if (localStorage.getItem('events-panel-open') === 'true' && isDesktop()) {
+        document.getElementById('events-section').classList.add('panel-open');
+        document.getElementById('app').classList.add('events-panel-open');
+        fabEvents.classList.add('panel-active');
+    }
     fabEvents.addEventListener('click', () => {
         const section = document.getElementById('events-section');
         const app = document.getElementById('app');
         const open = section.classList.toggle('panel-open');
         app.classList.toggle('events-panel-open', open);
         fabEvents.classList.toggle('panel-active', open);
+        localStorage.setItem('events-panel-open', open);
     });
 
     // Re-render on resize (crossing 768px boundary)
@@ -1242,6 +1248,7 @@ function completeEvent(item) {
     }
     saveEvents();
     renderEventsList();
+    if (isDesktop()) renderDesktopView();
 }
 
 function undoComplete(item) {
@@ -1256,6 +1263,7 @@ function undoComplete(item) {
     }
     saveEvents();
     renderEventsList();
+    if (isDesktop()) renderDesktopView();
 }
 
 function handleUndo(item, btn) {
@@ -1308,6 +1316,7 @@ function handleDelete(item, btn) {
         eventsState.deleteConfirmId = null;
         saveEvents();
         renderEventsList();
+        if (isDesktop()) renderDesktopView();
     } else {
         // First tap — confirm
         eventsState.deleteConfirmId = confirmKey;
@@ -1441,6 +1450,7 @@ function saveOO() {
     saveEvents();
     closeOOModal();
     renderEventsList();
+    if (isDesktop()) renderDesktopView();
 }
 
 // ---- REC Modal ----
@@ -1493,6 +1503,7 @@ function saveREC() {
     saveEvents();
     closeRECModal();
     renderEventsList();
+    if (isDesktop()) renderDesktopView();
 }
 
 // ---- Events event listeners ----

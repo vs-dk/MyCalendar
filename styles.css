@@ -1134,17 +1134,16 @@ html, body {
 
     /* FAB */
     #desktop-fab {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
         position: fixed;
         bottom: 24px;
         right: 24px;
         z-index: 200;
-        gap: 8px;
     }
 
     #fab-panel {
+        position: absolute;
+        bottom: 56px;
+        right: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
