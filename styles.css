@@ -1230,14 +1230,34 @@ html, body {
         display: flex !important;
         flex-direction: column;
         margin-top: 0;
-        padding: 20px 24px 40px;
-        border-top: 2px solid #555;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
+        padding: 20px 0 40px;
+        border-top: none;
+        max-width: 100%;
         flex: none;
         overflow: visible;
         min-height: auto;
+        position: relative;
+    }
+
+    /* Full-width separator line */
+    #events-section::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: #333;
+        margin-bottom: 20px;
+    }
+
+    #events-title-row,
+    #events-toolbar,
+    #events-list {
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        padding-left: 24px;
+        padding-right: 24px;
     }
 
     #events-title-row {
