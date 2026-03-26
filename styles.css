@@ -1085,7 +1085,7 @@ html, body {
 
     #app {
         max-width: 100%;
-        padding: 12px 24px;
+        padding: 4px 24px;
         height: auto;
     }
 
@@ -1108,7 +1108,7 @@ html, body {
     }
 
     #desktop-year-label {
-        font-size: 1rem;
+        font-size: 0.85rem;
         font-weight: 500;
         color: var(--text-header);
         letter-spacing: -0.02em;
@@ -1120,9 +1120,9 @@ html, body {
         background: none;
         border: none;
         color: var(--text-header);
-        font-size: 2rem;
+        font-size: 1.2rem;
         cursor: pointer;
-        padding: 4px 12px;
+        padding: 2px 8px;
         border-radius: 6px;
         transition: background var(--transition-fast), color var(--transition-fast);
         line-height: 1;
@@ -1137,7 +1137,7 @@ html, body {
     #desktop-months-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+        gap: 8px;
     }
 
     /* Mini month */
