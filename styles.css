@@ -1104,11 +1104,11 @@ html, body {
         align-items: center;
         justify-content: center;
         gap: 16px;
-        padding: 0 0 4px;
+        padding: 0;
     }
 
     #desktop-year-label {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 500;
         color: var(--text-header);
         letter-spacing: -0.02em;
