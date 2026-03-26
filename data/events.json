@@ -65,6 +65,12 @@
       "date": "2026-04-01",
       "text": "Puertas Abiertas 1030-1230",
       "completed": false
+    },
+    {
+      "id": "mn752agosc1c",
+      "date": "2026-04-15",
+      "text": "Musicoop 630pm",
+      "completed": false
     }
   ],
   "recurring": [
