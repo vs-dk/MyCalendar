@@ -7,12 +7,13 @@ on:
     # GitHub cron can delay up to ~60min, so we DON'T check the clock.
     # Times are set ~15min early to account for typical GH Actions delay.
     #
-    # Morning summary (target: ~8:00am Madrid)
-    - cron: '0 6 * * *'     # 06:00 UTC → 08:00 CEST / 07:00 CET
-    # Pickup from school (target: ~3:15pm Madrid)
-    - cron: '15 13 * * *'   # 13:15 UTC → 15:15 CEST / 14:15 CET
-    # Evening summary (target: ~8:00pm Madrid)
-    - cron: '0 18 * * *'    # 18:00 UTC → 20:00 CEST / 19:00 CET
+    # Crons adjusted -1h for CEST (empirical GH offset). Review after Oct DST change.
+    # Morning summary (target: ~8:15am CEST)
+    - cron: '15 5 * * *'    # 05:15 UTC → ~08:15 CEST with observed +1h offset
+    # Pickup from school (target: ~3:15pm CEST)
+    - cron: '15 12 * * *'   # 12:15 UTC → ~15:15 CEST with observed +1h offset
+    # Evening summary (target: ~8:15pm CEST)
+    - cron: '15 17 * * *'   # 17:15 UTC → ~20:15 CEST with observed +1h offset
   workflow_dispatch:
     inputs:
       type:
@@ -40,9 +41,9 @@ jobs:
           else
             CRON="${{ github.event.schedule }}"
             case "$CRON" in
-              "0 6 * * *")    echo "type=morning" >> $GITHUB_OUTPUT ;;
-              "15 13 * * *")  echo "type=pickup"  >> $GITHUB_OUTPUT ;;
-              "0 18 * * *")   echo "type=evening" >> $GITHUB_OUTPUT ;;
+              "15 5 * * *")   echo "type=morning" >> $GITHUB_OUTPUT ;;
+              "15 12 * * *")  echo "type=pickup"  >> $GITHUB_OUTPUT ;;
+              "15 17 * * *")  echo "type=evening" >> $GITHUB_OUTPUT ;;
               *)              echo "type=unknown"  >> $GITHUB_OUTPUT ;;
             esac
           fi
