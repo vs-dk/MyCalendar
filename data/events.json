@@ -101,6 +101,12 @@
       "date": "2026-04-16",
       "text": "Pa y xesco. Billares",
       "completed": false
+    },
+    {
+      "id": "mni455x8b69u",
+      "date": "2026-04-03",
+      "text": "Recurrent test notification?",
+      "completed": false
     }
   ],
   "recurring": [
