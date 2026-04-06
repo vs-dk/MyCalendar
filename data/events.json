@@ -136,7 +136,9 @@
       "id": "mnhnnd7quqdl",
       "day": 2,
       "text": "Test",
-      "completed": []
+      "completed": [
+        "2026-05-02"
+      ]
     }
   ]
 }
