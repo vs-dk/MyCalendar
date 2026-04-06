@@ -114,7 +114,9 @@
       "id": "mmyzz9iy3iju",
       "day": 1,
       "text": "Pay rent",
-      "completed": []
+      "completed": [
+        "2026-01-01"
+      ]
     },
     {
       "id": "mmyzzhdu3ajs",
