@@ -132,14 +132,17 @@
       "day": 1,
       "text": "Pay crochet",
       "completed": [
-        "2026-04-01"
+        "2026-04-01",
+        "2026-01-01"
       ]
     },
     {
       "id": "mnmudves0gzz",
       "day": 6,
       "text": "RECURR NO DESAPARECER",
-      "completed": []
+      "completed": [
+        "2026-01-06"
+      ]
     }
   ]
 }
