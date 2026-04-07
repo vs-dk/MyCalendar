@@ -1055,10 +1055,11 @@ function getEventsList() {
     // Recurring events — expand into instances
     if (filter !== 'oo') {
         for (const ev of eventsState.recurring) {
-            // For non-completed: start 3 months back to catch overdue instances
+            // For non-completed: start from next month if the day already passed this month
+            const startDate = new Date(today.substring(0, 7) + '-01');
             const start = filter === 'completed'
                 ? new Date(minCompleted.substring(0, 7) + '-01')
-                : new Date(addMonths(today, -3).substring(0, 7) + '-01');
+                : new Date(startDate);
             // For completed: scan up to 24 months ahead to catch future instances marked done
             const endDate = filter === 'completed'
                 ? new Date(addMonths(today, 24))
@@ -1079,7 +1080,8 @@ function getEventsList() {
                         items.push({ id: ev.id, date: instanceDate, text: ev.text, type: 'rec', sortDate: instanceDate, recId: ev.id, completed: true });
                     }
                 } else {
-                    if (!isCompleted && instanceDate <= maxDate) {
+                    const minDate = ev.createdAt || '0000-01-01';
+                    if (!isCompleted && instanceDate >= minDate && instanceDate <= maxDate) {
                         items.push({ id: ev.id, date: instanceDate, text: ev.text, type: 'rec', sortDate: instanceDate, recId: ev.id, completed: false });
                     }
                 }
@@ -1517,6 +1519,7 @@ function saveREC() {
             day,
             text,
             completed: [],
+            createdAt: todayStr(),
         });
     }
 
