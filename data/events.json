@@ -142,6 +142,13 @@
         "2026-02-01",
         "2026-03-01"
       ]
+    },
+    {
+      "id": "mnofx3ewuusn",
+      "day": 7,
+      "text": "TEST RECURR",
+      "completed": [],
+      "createdAt": "2026-04-07"
     }
   ]
 }
