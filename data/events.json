@@ -147,7 +147,9 @@
       "id": "mnofx3ewuusn",
       "day": 7,
       "text": "TEST RECURR",
-      "completed": [],
+      "completed": [
+        "2026-04-07"
+      ],
       "createdAt": "2026-04-07"
     }
   ]
