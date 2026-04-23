@@ -125,6 +125,12 @@
       "date": "2026-04-22",
       "text": "Crema de sol 😎",
       "completed": true
+    },
+    {
+      "id": "mobjc33kcva1",
+      "date": "2026-04-29",
+      "text": "Enfermera can pastilla",
+      "completed": false
     }
   ],
   "recurring": [
