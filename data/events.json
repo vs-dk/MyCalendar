@@ -143,6 +143,12 @@
       "date": "2026-05-08",
       "text": "Jornada deportiva. 1430h",
       "completed": false
+    },
+    {
+      "id": "mofhdsh1613d",
+      "date": "2026-04-27",
+      "text": "Calendario curro - medico",
+      "completed": false
     }
   ],
   "recurring": [
