@@ -149,6 +149,12 @@
       "date": "2026-04-27",
       "text": "Calendario curro - medico",
       "completed": true
+    },
+    {
+      "id": "mohbu9kly43r",
+      "date": "2026-05-11",
+      "text": "Tutoría 1430h",
+      "completed": false
     }
   ],
   "recurring": [
