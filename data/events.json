@@ -161,6 +161,12 @@
       "date": "2026-05-06",
       "text": "Donación sangre cole",
       "completed": false
+    },
+    {
+      "id": "moiusag8h39c",
+      "date": "2026-04-30",
+      "text": "pedir tarjeta credito fisica",
+      "completed": false
     }
   ],
   "recurring": [
