@@ -94,7 +94,7 @@
       "id": "mn96gqc3uz6w",
       "date": "2026-05-02",
       "text": "48€(120€) reserva cole",
-      "completed": false
+      "completed": true
     },
     {
       "id": "mnbqbi9jkm55",
@@ -112,13 +112,13 @@
       "id": "mnpthjzi8n3i",
       "date": "2026-06-28",
       "text": "Libro collage Madrid",
-      "completed": false
+      "completed": true
     },
     {
       "id": "mnptin48a4oj",
       "date": "2026-06-21",
       "text": "MAD Moxila+collage+bug+present",
-      "completed": false
+      "completed": true
     },
     {
       "id": "mo8qqr3jtjf5",
@@ -196,7 +196,8 @@
         "2026-04-01",
         "2026-01-01",
         "2026-02-01",
-        "2026-03-01"
+        "2026-03-01",
+        "2026-05-01"
       ]
     }
   ]
