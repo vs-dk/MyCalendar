@@ -155,6 +155,12 @@
       "date": "2026-05-11",
       "text": "Tutoría 1430h",
       "completed": false
+    },
+    {
+      "id": "moisl7ylnzks",
+      "date": "2026-05-06",
+      "text": "Donación sangre cole",
+      "completed": false
     }
   ],
   "recurring": [
