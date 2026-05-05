@@ -173,6 +173,12 @@
       "date": "2026-04-30",
       "text": "Amazon collage",
       "completed": true
+    },
+    {
+      "id": "mosnitfto7b3",
+      "date": "2026-05-20",
+      "text": "Reu viaje de estudios",
+      "completed": false
     }
   ],
   "recurring": [
