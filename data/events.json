@@ -197,6 +197,12 @@
       "date": "2026-09-07",
       "text": "16h. Limpieza dentista Ella",
       "completed": false
+    },
+    {
+      "id": "mpbiicwm2xof",
+      "date": "2026-06-27",
+      "text": "Checkin MAD",
+      "completed": false
     }
   ],
   "recurring": [
