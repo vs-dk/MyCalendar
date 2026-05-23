@@ -184,10 +184,12 @@
     "work"
   ],
   "2026-06-29": [
-    "custody"
+    "custody",
+    "school"
   ],
   "2026-06-30": [
-    "custody"
+    "custody",
+    "school"
   ],
   "2026-07-01": [
     "school",
@@ -538,6 +540,12 @@
     "custody"
   ],
   "2026-06-22": [
+    "school"
+  ],
+  "2026-06-23": [
+    "school"
+  ],
+  "2026-06-24": [
     "school"
   ]
 }
