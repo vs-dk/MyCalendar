@@ -227,6 +227,12 @@
       "date": "2026-05-31",
       "text": "Money for graduacion",
       "completed": true
+    },
+    {
+      "id": "mpuvesju92ow",
+      "date": "2026-06-05",
+      "text": "Quiniela",
+      "completed": false
     }
   ],
   "recurring": [
