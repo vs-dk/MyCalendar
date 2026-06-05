@@ -232,7 +232,7 @@
       "id": "mpuvesju92ow",
       "date": "2026-06-05",
       "text": "Quiniela",
-      "completed": false
+      "completed": true
     },
     {
       "id": "mpv53fbwjrqm",
@@ -250,7 +250,7 @@
       "id": "mpvle45bs8dk",
       "date": "2026-06-02",
       "text": "Foto xa Diana",
-      "completed": false
+      "completed": true
     }
   ],
   "recurring": [
