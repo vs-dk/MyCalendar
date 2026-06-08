@@ -257,6 +257,12 @@
       "date": "2026-06-09",
       "text": "Quiniela",
       "completed": false
+    },
+    {
+      "id": "mq51ahdytwa3",
+      "date": "2026-06-08",
+      "text": "Cuenta gastos compartidos",
+      "completed": false
     }
   ],
   "recurring": [
