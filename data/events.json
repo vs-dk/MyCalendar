@@ -287,6 +287,12 @@
       "date": "2026-06-23",
       "text": "Taller 830h",
       "completed": false
+    },
+    {
+      "id": "mqpe8y4v76v6",
+      "date": "2026-08-03",
+      "text": "Dentista fundas 16h",
+      "completed": false
     }
   ],
   "recurring": [
