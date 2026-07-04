@@ -317,6 +317,12 @@
       "date": "2026-07-04",
       "text": "Checkin PMI",
       "completed": true
+    },
+    {
+      "id": "mr6q6yjc19v9",
+      "date": "2026-07-05",
+      "text": "DNI nata",
+      "completed": false
     }
   ],
   "recurring": [
