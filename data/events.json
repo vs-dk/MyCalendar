@@ -347,6 +347,12 @@
       "date": "2026-07-17",
       "text": "Escribir mami para sabado",
       "completed": true
+    },
+    {
+      "id": "mrtl1k25f63b",
+      "date": "2026-07-21",
+      "text": "Papel pastillas maquina espuma",
+      "completed": false
     }
   ],
   "recurring": [
