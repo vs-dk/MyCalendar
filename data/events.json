@@ -353,6 +353,12 @@
       "date": "2026-07-21",
       "text": "Papel pastillas maquina espuma",
       "completed": true
+    },
+    {
+      "id": "mrzgl2l9a7c1",
+      "date": "2026-07-25",
+      "text": "Checkin PMI",
+      "completed": false
     }
   ],
   "recurring": [
