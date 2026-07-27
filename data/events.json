@@ -359,6 +359,12 @@
       "date": "2026-07-25",
       "text": "Checkin PMI",
       "completed": true
+    },
+    {
+      "id": "ms3ba6p9y5pw",
+      "date": "2026-07-28",
+      "text": "Fine 11h",
+      "completed": false
     }
   ],
   "recurring": [
