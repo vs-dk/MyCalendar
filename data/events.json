@@ -395,6 +395,12 @@
       "date": "2026-08-17",
       "text": "1230h dentista para mi",
       "completed": false
+    },
+    {
+      "id": "msnelz3a910m",
+      "date": "2026-08-12",
+      "text": "Checkin PMI",
+      "completed": false
     }
   ],
   "recurring": [
