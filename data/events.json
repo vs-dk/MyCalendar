@@ -401,6 +401,12 @@
       "date": "2026-08-12",
       "text": "Checkin PMI",
       "completed": false
+    },
+    {
+      "id": "msp5uvq0ahrp",
+      "date": "2026-08-18",
+      "text": "16h a 17h insp gas natural",
+      "completed": false
     }
   ],
   "recurring": [
