@@ -544,19 +544,24 @@
     "custody"
   ],
   "2027-06-21": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-06-22": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-06-23": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-06-24": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-06-25": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-06-28": [
     "school"
@@ -817,6 +822,9 @@
     "custody"
   ],
   "2027-06-13": [
+    "custody"
+  ],
+  "2027-06-26": [
     "custody"
   ]
 }
