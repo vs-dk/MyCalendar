@@ -467,6 +467,12 @@
       "date": "2026-10-10",
       "text": "Karts 11oct",
       "completed": false
+    },
+    {
+      "id": "muwscbvo8rmk",
+      "date": "2026-10-07",
+      "text": "Regalo Ella",
+      "completed": false
     }
   ],
   "recurring": [
@@ -484,7 +490,8 @@
         "2026-06-07",
         "2026-07-07",
         "2026-08-07",
-        "2026-09-07"
+        "2026-09-07",
+        "2026-10-07"
       ]
     },
     {
