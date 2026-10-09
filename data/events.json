@@ -479,6 +479,12 @@
       "date": "2026-10-10",
       "text": "Examen mates",
       "completed": false
+    },
+    {
+      "id": "mv13flr4p1wc",
+      "date": "2026-10-10",
+      "text": "Biodramina",
+      "completed": false
     }
   ],
   "recurring": [
