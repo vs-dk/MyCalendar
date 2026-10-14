@@ -491,6 +491,12 @@
       "date": "2026-11-07",
       "text": "Cineciutat Laia 11h",
       "completed": false
+    },
+    {
+      "id": "mv7xh3j9t8fx",
+      "date": "2026-10-22",
+      "text": "1015h dentista",
+      "completed": false
     }
   ],
   "recurring": [
