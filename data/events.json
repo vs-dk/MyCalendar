@@ -521,6 +521,12 @@
       "date": "2026-10-26",
       "text": "Estudio biométrico 1745h",
       "completed": false
+    },
+    {
+      "id": "mvj61ocx1rs0",
+      "date": "2026-10-28",
+      "text": "Llamada ginecologia",
+      "completed": false
     }
   ],
   "recurring": [
