@@ -533,6 +533,12 @@
       "date": "2027-11-08",
       "text": "Dentista limpieza mia 11h",
       "completed": false
+    },
+    {
+      "id": "mvpdujxknffd",
+      "date": "2026-11-07",
+      "text": "Alojamiento Andorra. Cancelar?",
+      "completed": false
     }
   ],
   "recurring": [
