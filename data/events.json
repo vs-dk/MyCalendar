@@ -575,6 +575,12 @@
       "date": "2026-11-09",
       "text": "Pediatra can pastilla 17h",
       "completed": true
+    },
+    {
+      "id": "mwaf0twrcyka",
+      "date": "2026-11-23",
+      "text": "Uniforme vaquero. Fotos cole",
+      "completed": false
     }
   ],
   "recurring": [
