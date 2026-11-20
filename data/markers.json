@@ -538,22 +538,27 @@
   ],
   "2027-03-26": [
     "school",
-    "work"
+    "work",
+    "custody"
   ],
   "2027-03-29": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-03-30": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-03-31": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-04-01": [
     "school"
   ],
   "2027-04-02": [
-    "school"
+    "school",
+    "custody"
   ],
   "2027-06-21": [
     "school",
@@ -843,6 +848,12 @@
     "custody"
   ],
   "2027-04-08": [
+    "custody"
+  ],
+  "2027-03-27": [
+    "custody"
+  ],
+  "2027-03-28": [
     "custody"
   ]
 }
